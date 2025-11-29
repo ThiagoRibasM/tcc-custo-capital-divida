@@ -23,10 +23,15 @@ REFERENCES_PATH = DATA_EXTERNAL / "references"
 # Paths de notebooks (para referência)
 NOTEBOOKS_ROOT = PROJECT_ROOT / "notebooks"
 
+# Paths de relatórios
+REPORTS_DIR = PROJECT_ROOT / "reports"
+FIGURES_DIR = REPORTS_DIR / "figures"
+
 # Função helper para criar diretórios se não existirem
 def ensure_dirs():
     """Cria todos os diretórios necessários se não existirem."""
     for path in [DATA_RAW, DATA_PROCESSED, DATA_EXTERNAL, 
-                 LLM_EXTRACTIONS_PATH, CONSOLIDATED_PATH, REFERENCES_PATH]:
+                 LLM_EXTRACTIONS_PATH, CONSOLIDATED_PATH, REFERENCES_PATH,
+                 REPORTS_DIR, FIGURES_DIR]:
         path.mkdir(parents=True, exist_ok=True)
 
