@@ -56,8 +56,14 @@ pip install -r requirements.txt
 ```
 
 4. Configure a API Key da OpenAI:
-   - Crie um arquivo `.env` na raiz do projeto
-   - Adicione: `OPENAI_API_KEY=sua_chave_aqui`
+   ```bash
+   export OPENAI_API_KEY="sua_chave_aqui"
+   ```
+   Ou crie um arquivo `.env` na raiz do projeto (não versionado):
+   ```
+   OPENAI_API_KEY=sua_chave_aqui
+   ```
+   **Importante**: A API key não deve ser commitada no repositório. Use variáveis de ambiente.
 
 ## Uso
 
