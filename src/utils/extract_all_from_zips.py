@@ -1,65 +1,41 @@
 #!/usr/bin/env python3
 """
-Script para extrair todos os arquivos dos ZIPs de DFPs.
-Extrai PDFs, planilhas e outros arquivos, organizando por tipo.
+Script para extrair apenas PDFs dos ZIPs de DFPs.
+Planilhas e XMLs não são extraídos, apenas PDFs.
 """
 import zipfile
-import shutil
 from pathlib import Path
 import sys
 from collections import defaultdict
 
 sys.path.append(str(Path(__file__).parent.parent))
-from utils.config import DFP_2024_PATH, EXTRACTED_PDFS_DFP, DATA_RAW
+from utils.config import DFP_2024_PATH, EXTRACTED_PDFS_DFP
 
 
-def get_file_type(file_path: Path) -> str:
-    """
-    Determina o tipo de arquivo baseado na extensão.
-    
-    Returns:
-        'pdf', 'spreadsheet', 'other'
-    """
-    ext = file_path.suffix.lower()
-    
-    if ext == '.pdf':
-        return 'pdf'
-    elif ext in ['.xlsx', '.xls', '.csv']:
-        return 'spreadsheet'
-    else:
-        return 'other'
-
-
-def extract_all_from_zips(
+def extract_pdfs_from_zips(
     zip_dir: Path,
-    pdf_dest: Path,
-    spreadsheet_dest: Path,
-    other_dest: Path
+    pdf_dest: Path
 ) -> dict:
     """
-    Extrai todos os arquivos dos ZIPs, organizando por tipo.
+    Extrai apenas PDFs dos ZIPs, ignorando planilhas e XMLs.
     
     Args:
         zip_dir: Diretório com os ZIPs
         pdf_dest: Destino para PDFs
-        spreadsheet_dest: Destino para planilhas
-        other_dest: Destino para outros arquivos
     
     Returns:
         Dicionário com estatísticas da extração
     """
-    # Cria diretórios de destino
+    # Cria diretório de destino
     pdf_dest.mkdir(parents=True, exist_ok=True)
-    spreadsheet_dest.mkdir(parents=True, exist_ok=True)
-    other_dest.mkdir(parents=True, exist_ok=True)
     
     # Estatísticas
     stats = {
         'zips_processed': 0,
         'zips_errors': 0,
-        'files_extracted': defaultdict(int),
-        'files_skipped': defaultdict(int),
-        'file_types_found': set(),
+        'pdfs_extracted': 0,
+        'pdfs_skipped': 0,
+        'other_files_found': 0,
         'errors': []
     }
     
@@ -68,12 +44,11 @@ def extract_all_from_zips(
     total_zips = len(zip_files)
     
     print("="*70)
-    print("EXTRAÇÃO DE ARQUIVOS DOS ZIPs")
+    print("EXTRAÇÃO DE PDFs DOS ZIPs")
     print("="*70)
     print(f"📦 Total de ZIPs encontrados: {total_zips}")
     print(f"📄 PDFs → {pdf_dest}")
-    print(f"📊 Planilhas → {spreadsheet_dest}")
-    print(f"📁 Outros → {other_dest}")
+    print("⚠️  Apenas PDFs serão extraídos (planilhas e XMLs ignorados)")
     print()
     
     # Processa cada ZIP
@@ -91,29 +66,22 @@ def extract_all_from_zips(
                     if file_name.endswith('/'):
                         continue
                     
-                    # Determina tipo de arquivo
+                    # Verifica se é PDF
                     file_path = Path(file_name)
-                    file_type = get_file_type(file_path)
-                    stats['file_types_found'].add(file_path.suffix.lower())
-                    
-                    # Define destino baseado no tipo
-                    if file_type == 'pdf':
-                        dest_dir = pdf_dest
-                    elif file_type == 'spreadsheet':
-                        dest_dir = spreadsheet_dest
-                    else:
-                        dest_dir = other_dest
+                    if file_path.suffix.lower() != '.pdf':
+                        stats['other_files_found'] += 1
+                        continue  # Ignora arquivos que não são PDFs
                     
                     # Nome do arquivo final
                     final_name = file_path.name
-                    dest_path = dest_dir / final_name
+                    dest_path = pdf_dest / final_name
                     
                     # Verifica se já existe (evita duplicação)
                     if dest_path.exists():
-                        stats['files_skipped'][file_type] += 1
+                        stats['pdfs_skipped'] += 1
                         continue
                     
-                    # Extrai arquivo
+                    # Extrai apenas PDFs
                     try:
                         # Lê conteúdo do arquivo
                         file_content = zip_ref.read(file_name)
@@ -122,7 +90,7 @@ def extract_all_from_zips(
                         with open(dest_path, 'wb') as f:
                             f.write(file_content)
                         
-                        stats['files_extracted'][file_type] += 1
+                        stats['pdfs_extracted'] += 1
                         
                     except Exception as e:
                         error_msg = f"Erro ao extrair {file_name} de {zip_path.name}: {e}"
@@ -150,7 +118,7 @@ def generate_extraction_report(stats: dict, report_path: Path):
     Gera relatório da extração.
     """
     with open(report_path, 'w', encoding='utf-8') as f:
-        f.write("# Relatório de Extração de ZIPs\n\n")
+        f.write("# Relatório de Extração de PDFs dos ZIPs\n\n")
         f.write(f"**Data:** {Path(__file__).stat().st_mtime}\n\n")
         f.write("---\n\n")
         
@@ -159,34 +127,13 @@ def generate_extraction_report(stats: dict, report_path: Path):
         f.write(f"- **ZIPs com erro:** {stats['zips_errors']}\n")
         f.write(f"- **Total de erros:** {len(stats['errors'])}\n\n")
         
-        f.write("## Arquivos Extraídos\n\n")
-        total_extracted = sum(stats['files_extracted'].values())
-        f.write(f"**Total:** {total_extracted} arquivos\n\n")
+        f.write("## PDFs Extraídos\n\n")
+        f.write(f"- **PDFs extraídos:** {stats['pdfs_extracted']}\n")
+        f.write(f"- **PDFs ignorados (já existiam):** {stats['pdfs_skipped']}\n")
+        f.write(f"- **Outros arquivos encontrados (ignorados):** {stats['other_files_found']}\n\n")
         
-        f.write("| Tipo | Quantidade |\n")
-        f.write("|------|------------|\n")
-        for file_type, count in sorted(stats['files_extracted'].items()):
-            f.write(f"| {file_type} | {count} |\n")
-        f.write("\n")
-        
-        f.write("## Arquivos Ignorados (já existiam)\n\n")
-        total_skipped = sum(stats['files_skipped'].values())
-        f.write(f"**Total:** {total_skipped} arquivos\n\n")
-        
-        f.write("| Tipo | Quantidade |\n")
-        f.write("|------|------------|\n")
-        for file_type, count in sorted(stats['files_skipped'].items()):
-            f.write(f"| {file_type} | {count} |\n")
-        f.write("\n")
-        
-        f.write("## Tipos de Arquivo Encontrados\n\n")
-        f.write("Extensões encontradas nos ZIPs:\n\n")
-        for ext in sorted(stats['file_types_found']):
-            if ext:
-                f.write(f"- `{ext}`\n")
-            else:
-                f.write("- (sem extensão)\n")
-        f.write("\n")
+        f.write("## Nota\n\n")
+        f.write("Apenas PDFs são extraídos. Planilhas (Excel/CSV) e XMLs são ignorados.\n\n")
         
         if stats['errors']:
             f.write("## Erros Encontrados\n\n")
@@ -202,16 +149,12 @@ def main():
     # Paths
     zip_dir = DFP_2024_PATH
     pdf_dest = EXTRACTED_PDFS_DFP
-    spreadsheet_dest = DATA_RAW / "spreadsheets" / "dfp"
-    other_dest = DFP_2024_PATH / "extracted_other"
     report_path = DFP_2024_PATH / "extraction_report.md"
     
-    # Extrai arquivos
-    stats = extract_all_from_zips(
+    # Extrai apenas PDFs
+    stats = extract_pdfs_from_zips(
         zip_dir,
-        pdf_dest,
-        spreadsheet_dest,
-        other_dest
+        pdf_dest
     )
     
     # Gera relatório
@@ -225,16 +168,9 @@ def main():
     if stats['zips_errors'] > 0:
         print(f"❌ ZIPs com erro: {stats['zips_errors']}")
     print()
-    print("📄 Arquivos extraídos:")
-    for file_type, count in sorted(stats['files_extracted'].items()):
-        print(f"   {file_type}: {count}")
-    print()
-    print("⏭️  Arquivos ignorados (já existiam):")
-    for file_type, count in sorted(stats['files_skipped'].items()):
-        print(f"   {file_type}: {count}")
-    print()
-    print(f"📋 Tipos de arquivo encontrados: {len(stats['file_types_found'])}")
-    print(f"   {', '.join(sorted(stats['file_types_found']))}")
+    print(f"📄 PDFs extraídos: {stats['pdfs_extracted']}")
+    print(f"⏭️  PDFs ignorados (já existiam): {stats['pdfs_skipped']}")
+    print(f"📁 Outros arquivos encontrados (ignorados): {stats['other_files_found']}")
     print()
     print(f"📄 Relatório salvo em: {report_path}")
     print("="*70)

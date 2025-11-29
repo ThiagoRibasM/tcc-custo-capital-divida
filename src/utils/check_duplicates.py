@@ -11,10 +11,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 from utils.config import (
     EXTRACTED_PDFS_DFP,
     DFP_NOVO_MERCADO_PATH,
-    SPREADSHEETS_DFP,
     LLM_EXTRACTIONS_DFP,
     CONSOLIDATED_PATH,
-    XMLS_DFP
 )
 
 
@@ -132,12 +130,6 @@ def main():
         CONSOLIDATED_PATH,
     ]
     
-    # Diretórios para verificar Excel
-    excel_dirs = [
-        SPREADSHEETS_DFP,
-        CONSOLIDATED_PATH,
-    ]
-    
     # Verifica PDFs duplicados (por nome e tamanho)
     print("\n" + "="*70)
     print("VERIFICAÇÃO DE PDFs DUPLICADOS (por nome e tamanho)")
@@ -172,30 +164,12 @@ def main():
     else:
         print("\n✅ Nenhum CSV duplicado encontrado (por nome e tamanho)")
     
-    # Verifica Excel duplicados
-    print("\n" + "="*70)
-    print("VERIFICAÇÃO DE EXCEL DUPLICADOS (por nome e tamanho)")
-    print("="*70)
-    excel_duplicates = find_duplicates_by_name_and_size(excel_dirs, ['.xlsx', '.xls'])
-    
-    if excel_duplicates:
-        print(f"\n⚠️  Encontrados {len(excel_duplicates)} arquivos Excel duplicados:")
-        for (name, size), paths in list(excel_duplicates.items())[:10]:
-            print(f"\n   📈 {name} ({size:,} bytes)")
-            for path in paths:
-                print(f"      - {path}")
-        if len(excel_duplicates) > 10:
-            print(f"\n   ... e mais {len(excel_duplicates) - 10} duplicatas.")
-    else:
-        print("\n✅ Nenhum arquivo Excel duplicado encontrado (por nome e tamanho)")
-    
     # Resumo
     print("\n" + "="*70)
     print("RESUMO")
     print("="*70)
     print(f"📄 PDFs duplicados (nome+tamanho): {len(pdf_duplicates)}")
     print(f"📊 CSVs duplicados (nome+tamanho): {len(csv_duplicates)}")
-    print(f"📈 Excel duplicados (nome+tamanho): {len(excel_duplicates)}")
     print()
     print("💡 Nota: Esta verificação compara apenas nome e tamanho.")
     print("   Para verificação por conteúdo (hash), execute com flag --content")

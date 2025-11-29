@@ -47,3 +47,4 @@ ENV/
 *.docx
 
 update_notebook_paths.py
+.env
