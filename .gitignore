@@ -46,3 +46,4 @@ ENV/
 # Arquivos do Word
 *.docx
 
+update_notebook_paths.py
