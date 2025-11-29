@@ -32,7 +32,7 @@ Extrair e analisar informações de financiamentos e empréstimos de empresas li
 
 ## Metodologia
 
-1. **Coleta de Dados**: Download automatizado de ITRs trimestrais e DFPs anuais da CVM
+1. **Coleta de Dados**: Download automatizado de DFPs anuais da CVM
 2. **Extração com IA**: Uso de GPT-4 para extrair informações estruturadas de financiamentos dos PDFs
 3. **Análise**: Cálculo de métricas de custo de dívida (Kd bruto e líquido)
 
@@ -69,14 +69,12 @@ pip install -r requirements.txt
 
 ### Coleta de Dados
 
-1. **Download de ITRs**: Execute `notebooks/01_data_collection/01_download_itr.ipynb`
-2. **Download de DFPs**: Execute `notebooks/01_data_collection/02_download_dfp_cvm.ipynb`
-3. **Extração de PDFs**: Execute `notebooks/01_data_collection/03_extract_pdfs_from_zips.ipynb`
+1. **Download de DFPs**: Execute `notebooks/01_data_collection/02_download_dfp_cvm.ipynb`
+2. **Extração de PDFs**: Execute `notebooks/01_data_collection/03_extract_pdfs_from_zips.ipynb`
 
 ### Extração com IA
 
-1. **Extração de ITRs**: Execute `notebooks/02_data_extraction/01_extract_itr_llm.ipynb`
-2. **Extração de DFPs**: Execute `notebooks/02_data_extraction/02_extract_dfp_kd.ipynb`
+1. **Extração de DFPs**: Execute `notebooks/02_data_extraction/02_extract_dfp_kd.ipynb`
 
 ## Dados
 

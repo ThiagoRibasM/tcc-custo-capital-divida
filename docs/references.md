@@ -79,4 +79,3 @@ KALOUDIS, Athanasios; TSOLIS, Dimitrios. Capital Structure in U.S., a Quantile R
 - Data de acesso: 29 de novembro de 2025
 - Referências organizadas por tema para facilitar a consulta
 - Total de referências: 25
-

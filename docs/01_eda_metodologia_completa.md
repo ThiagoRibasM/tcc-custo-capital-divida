@@ -31,7 +31,6 @@ TCC/
 ├── data/                    # Dados (não versionados)
 │   ├── raw/                 # Dados brutos (PDFs, ZIPs)
 │   │   ├── dfp_2024/        # Demonstrações Financeiras Padronizadas (anuais)
-│   │   └── itr_2024/        # Informações Trimestrais (ITRs)
 │   ├── processed/           # Dados processados
 │   │   ├── llm_extractions/ # CSVs extraídos pela IA por empresa
 │   │   └── consolidated/    # Arquivos Excel/CSV consolidados
@@ -65,7 +64,7 @@ Criado `src/utils/config.py` para centralizar todos os paths do projeto:
 
 - `PROJECT_ROOT`: Diretório raiz do projeto
 - `DATA_RAW`, `DATA_PROCESSED`, `DATA_EXTERNAL`: Paths de dados
-- `DFP_2024_PATH`, `ITR_2024_PATH`: Paths específicos
+- `DFP_2024_PATH`: Path específico para DFPs
 - `REPORTS_DIR`, `FIGURES_DIR`: Paths de relatórios e figuras
 
 **Benefícios:**
@@ -149,11 +148,6 @@ Criado script `src/utils/extract_article_summaries.py` para extrair resumos estr
 
 ### 3.1 Download de Demonstrações Financeiras
 
-**ITRs (Informações Trimestrais):**
-- Download automatizado de ITRs trimestrais de 2024
-- Empresas do Novo Mercado
-- Salvos em `data/raw/itr_2024/`
-
 **DFPs (Demonstrações Financeiras Padronizadas):**
 - Download de DFPs anuais de 2024
 - Foco em empresas do Novo Mercado
@@ -162,7 +156,6 @@ Criado script `src/utils/extract_article_summaries.py` para extrair resumos estr
 ### 3.2 Extração com LLM (GPT-4)
 
 **Notebooks de extração:**
-- `notebooks/02_data_extraction/01_extract_itr_llm.ipynb`: Extração de dados de ITRs
 - `notebooks/02_data_extraction/02_extract_dfp_kd.ipynb`: Extração de Kd das DFPs
 
 **Metodologia:**
@@ -496,14 +489,12 @@ Criado `src/utils/regenerate_pipeline_without_outliers.py` que:
 ### 7.4 Notebooks
 
 **Coleta de dados:**
-- `notebooks/01_data_collection/01_download_itr.ipynb`
 - `notebooks/01_data_collection/02_download_dfp_cvm.ipynb`
 - `notebooks/01_data_collection/03_extract_pdfs_from_zips.ipynb`
 - `notebooks/01_data_collection/04_extract_b3_companies.ipynb`
 - `notebooks/01_data_collection/05_filter_novo_mercado.ipynb`
 
 **Extração com IA:**
-- `notebooks/02_data_extraction/01_extract_itr_llm.ipynb`
 - `notebooks/02_data_extraction/02_extract_dfp_kd.ipynb`
 
 ### 7.5 Documentação
