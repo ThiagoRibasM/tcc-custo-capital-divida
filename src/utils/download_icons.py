@@ -18,7 +18,10 @@ ICONS = {
     "db_icon.png": "https://img.icons8.com/color/128/database.png",
     "pdf_icon.png": "https://img.icons8.com/color/128/pdf-2.png",
     "ai_icon.png": "https://img.icons8.com/color/128/artificial-intelligence.png",
-    "csv_icon.png": "https://img.icons8.com/color/128/csv.png"
+    "csv_icon.png": "https://img.icons8.com/color/128/csv.png",
+    "settings_icon.png": "https://img.icons8.com/color/128/settings--v1.png",
+    "clean_icon.png": "https://img.icons8.com/color/128/broom.png",
+    "calc_icon.png": "https://img.icons8.com/color/128/calculator.png"
 }
 
 def download_file(url, target_path):
