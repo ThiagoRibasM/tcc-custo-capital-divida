@@ -1,96 +1,54 @@
 # TCC - Análise de Custo de Capital de Dívida (Kd)
 
-Trabalho de Conclusão de Curso (TCC) do MBA em Finanças focado na análise de custo de capital de dívida e restrições financeiras de empresas listadas na B3, com foco no Novo Mercado.
+**MBA em Finanças - Trabalho de Conclusão de Curso**  
+**Tema:** Determinantes do Custo de Capital de Dívida em Empresas do Novo Mercado (B3)
 
-## Estrutura do Projeto
+---
+
+## 📊 Bases de Dados
+
+### Dados Prontos para Modelagem
+
+| Arquivo | Descrição | Registros |
+|---------|-----------|-----------|
+| `kd_ponderado_por_empresa.csv` | **Variável Y** - Kd ponderado por empresa | 129 empresas |
+| `indicadores_financeiros_completos.csv` | **Variáveis X** - 34 indicadores financeiros | 100 empresas |
+| `dados_financeiros_brutos.csv` | Dados de balanço e DRE | 100 empresas |
+| `financiamentos_consolidados.csv` | Detalhes dos financiamentos | 937 registros |
+| `empresas_novo_mercado.csv` | Lista de empresas do Novo Mercado | 141 empresas |
+
+### Localização
+```
+data/processed/consolidated/
+```
+
+---
+
+## 📚 Bibliografia
+
+- `docs/references.md` - 25 referências no formato ABNT
+- `docs/article_summaries.md` - Resumos dos artigos processados
+
+---
+
+## 🛠️ Estrutura do Projeto
 
 ```
 TCC/
-├── data/                    # Dados (não versionados)
-│   ├── raw/                 # Dados brutos (PDFs, ZIPs)
-│   ├── processed/           # Dados processados (CSVs, Excel)
-│   └── external/            # Dados externos (referências)
-│
-├── notebooks/               # Jupyter Notebooks
-│   ├── 01_data_collection/ # Coleta de dados
-│   ├── 02_data_extraction/ # Extração com IA
-│   └── 03_analysis/         # Análises (futuro)
-│
-├── src/                     # Código Python reutilizável
-│   ├── data_collection/    # Módulos de coleta
-│   ├── data_extraction/     # Módulos de extração
-│   └── utils/               # Utilitários e configurações
-│
-├── models/                  # Modelos treinados (futuro)
-├── reports/                 # Relatórios (futuro)
-└── docs/                    # Documentação
+├── data/
+│   └── processed/consolidated/   # Bases de dados
+├── docs/                          # Bibliografia
+├── src/utils/                     # Scripts Python core
+├── notebooks/                     # (Vazio - para novos notebooks)
+├── reports/                       # (Vazio - para novos relatórios)
+└── models/                        # (Vazio - para modelos)
 ```
 
-## Objetivo
+---
 
-Extrair e analisar informações de financiamentos e empréstimos de empresas listadas na B3, especialmente do Novo Mercado, utilizando técnicas de processamento de linguagem natural (LLM) para extrair dados estruturados das demonstrações financeiras.
+## 🚀 Próximos Passos
 
-## Metodologia
-
-1. **Coleta de Dados**: Download automatizado de DFPs anuais da CVM
-2. **Extração com IA**: Uso de GPT-4 para extrair informações estruturadas de financiamentos dos PDFs
-3. **Análise**: Cálculo de métricas de custo de dívida (Kd bruto e líquido)
-
-## Instalação
-
-1. Clone o repositório:
-```bash
-git clone <repository-url>
-cd TCC
-```
-
-2. Crie um ambiente virtual:
-```bash
-python -m venv venv
-source venv/bin/activate  # No Windows: venv\Scripts\activate
-```
-
-3. Instale as dependências:
-```bash
-pip install -r requirements.txt
-```
-
-4. Configure a API Key da OpenAI:
-   ```bash
-   export OPENAI_API_KEY="sua_chave_aqui"
-   ```
-   Ou crie um arquivo `.env` na raiz do projeto (não versionado):
-   ```
-   OPENAI_API_KEY=sua_chave_aqui
-   ```
-   **Importante**: A API key não deve ser commitada no repositório. Use variáveis de ambiente.
-
-## Uso
-
-### Coleta de Dados
-
-1. **Download de DFPs**: Execute `notebooks/01_data_collection/02_download_dfp_cvm.ipynb`
-2. **Extração de PDFs**: Execute `notebooks/01_data_collection/03_extract_pdfs_from_zips.ipynb`
-
-### Extração com IA
-
-1. **Extração de DFPs**: Execute `notebooks/02_data_extraction/02_extract_dfp_kd.ipynb`
-
-## Dados
-
-- **Dados brutos**: PDFs das demonstrações financeiras (não versionados)
-- **Dados processados**: CSVs e Excel com dados extraídos (não versionados)
-- **Arquivo principal**: `data/processed/consolidated/emp_e_fin_novo_mercado_YYYYMMDD.xlsx`
-
-## Configuração de Paths
-
-Todos os paths estão centralizados em `src/utils/config.py`. Os notebooks importam essas configurações automaticamente.
-
-## Contribuindo
-
-Este é um projeto acadêmico. Para sugestões ou melhorias, abra uma issue.
-
-## Licença
-
-Este projeto é parte de um trabalho acadêmico e está sujeito às políticas da instituição de ensino.
-
+1. **EDA** - Análise exploratória das variáveis
+2. **Feature Engineering** - Seleção de variáveis
+3. **Modelagem** - Regressão para Kd
+4. **Validação** - Testes de hipóteses
