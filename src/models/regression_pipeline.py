@@ -79,10 +79,72 @@ def load_data_raw():
     print(f"Dados Carregados: {len(df)} empresas")
     return df, valid_features
 
+def winsorize_features(df, features, lower=0.01, upper=0.99):
+    """Aplica winsorização (clipping) nas features para reduzir outliers."""
+    df_winsorized = df.copy()
+    for col in features:
+        if col in df_winsorized.columns:
+            q_low = df_winsorized[col].quantile(lower)
+            q_high = df_winsorized[col].quantile(upper)
+            df_winsorized[col] = df_winsorized[col].clip(q_low, q_high)
+    return df_winsorized
+
+def impute_missing_knn(df, features, n_neighbors=5):
+    """
+    Imputação inteligente via KNN (K-Nearest Neighbors).
+    Usa as K empresas mais similares para estimar valores faltantes.
+    """
+    from sklearn.impute import KNNImputer
+    from sklearn.preprocessing import StandardScaler
+    
+    # Separar features para imputação
+    df_features = df[features].copy()
+    
+    # Normalizar antes do KNN (importante para distância euclidiana)
+    scaler = StandardScaler()
+    df_scaled = pd.DataFrame(
+        scaler.fit_transform(df_features), 
+        columns=features, 
+        index=df_features.index
+    )
+    
+    # Aplicar KNN Imputer
+    imputer = KNNImputer(n_neighbors=n_neighbors, weights='distance')
+    df_imputed_scaled = imputer.fit_transform(df_scaled)
+    
+    # Reverter normalização
+    df_imputed = pd.DataFrame(
+        scaler.inverse_transform(df_imputed_scaled),
+        columns=features,
+        index=df_features.index
+    )
+    
+    # Contar imputações
+    n_missing_before = df_features.isna().sum().sum()
+    n_missing_after = df_imputed.isna().sum().sum()
+    
+    print(f"Imputação KNN (k={n_neighbors}): {n_missing_before} valores imputados.")
+    
+    # Atualizar DataFrame original
+    df_result = df.copy()
+    df_result[features] = df_imputed
+    
+    return df_result
+
 def get_clean_dataset(df, selected_features):
-    """Retorna dataset limpo apenas com as features selecionadas (dropna)."""
+    """Retorna dataset limpo com imputação KNN, winsorização e dropna apenas no target."""
     cols = selected_features + [TARGET_COL]
-    df_clean = df[cols].dropna()
+    df_subset = df[cols].copy()
+    
+    # 1. Imputação KNN para features (preserva empresas)
+    df_imputed = impute_missing_knn(df_subset, selected_features, n_neighbors=5)
+    
+    # 2. Dropna apenas no target (Kd é obrigatório)
+    df_clean = df_imputed.dropna(subset=[TARGET_COL])
+    
+    # 3. Winsorização 1%-99% para reduzir impacto de outliers
+    df_clean = winsorize_features(df_clean, selected_features, lower=0.01, upper=0.99)
+    
     print(f"Dataset pronto para modelagem: {len(df_clean)} obs (usando {len(selected_features)} features)")
     return df_clean
 
@@ -288,7 +350,6 @@ def main():
     candidate_features = pre_select_features(df, valid_features)
     
     # 3. Preparar Dataset Limpo para Modelagem
-    # Remove NaNs apenas para as features selecionadas + target
     df_clean = get_clean_dataset(df, candidate_features)
     
     if len(df_clean) < 50:
@@ -304,9 +365,36 @@ def main():
     if not final_features:
         print("❌ Erro: Nenhuma variável restou no modelo.")
         return
+    
+    print(f"\n→ Features Finais: {final_features}")
 
-    # 6. Modelo Final OLS
-    print("\n--- Modelo OLS Final ---")
+    # 6. Remoção de Outliers Influentes (Cook's Distance > 4/n)
+    print("\n--- Remoção de Outliers Influentes (Cook's Distance) ---")
+    
+    # Primeiro ajuste para identificar outliers
+    X_temp = sm.add_constant(df_clean[final_features])
+    y_temp = df_clean[TARGET_COL]
+    model_temp = sm.OLS(y_temp, X_temp).fit()
+    
+    # Calcular Cook's Distance
+    influence = model_temp.get_influence()
+    cooks = influence.cooks_distance[0]
+    n = len(cooks)
+    threshold = 4 / n
+    
+    # Identificar e remover outliers
+    outlier_mask = cooks > threshold
+    n_outliers = outlier_mask.sum()
+    
+    if n_outliers > 0:
+        print(f"⚠️ {n_outliers} observações com Cook's D > {threshold:.3f} identificadas.")
+        df_clean = df_clean[~outlier_mask].copy()
+        print(f"   Dataset reduzido de {n} para {len(df_clean)} observações.")
+    else:
+        print(f"✓ Nenhuma observação com Cook's D > {threshold:.3f}.")
+
+    # 7. Modelo Final OLS (pós-limpeza)
+    print("\n--- Modelo OLS Final (pós-limpeza) ---")
     X = sm.add_constant(df_clean[final_features])
     y = df_clean[TARGET_COL]
     

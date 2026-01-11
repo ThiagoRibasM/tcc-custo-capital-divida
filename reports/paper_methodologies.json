@@ -1,0 +1,615 @@
+[
+  {
+    "titulo": "A heterogeneidade da estrutura de dívida reduz o custo de capital?",
+    "autores": [
+      "João Paulo Augusto Eça",
+      "Tatiana Albanez"
+    ],
+    "ano": 2022,
+    "pais_estudo": "Brasil",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "Painel (EF)",
+      "erros_robustos": "sim (clusterizados por firma)"
+    },
+    "amostra": {
+      "n_empresas": 570,
+      "n_observacoes": 4025,
+      "periodo": "2010-2019",
+      "tipo_empresa": "abertas e fechadas"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "Custo da dívida",
+        "proxy": "Despesa financeira líquida de impostos sobre passivo oneroso médio"
+      },
+      "independentes_principais": [
+        {
+          "nome": "Índice Herfindahl-Hirschman",
+          "coeficiente": 0.023,
+          "significancia": "1%"
+        },
+        {
+          "nome": "Índice de dependência econômica",
+          "coeficiente": 0.01,
+          "significancia": "5%"
+        }
+      ],
+      "controles": [
+        "Tamanho",
+        "Retorno sobre o PL",
+        "Alavancagem",
+        "Tangibilidade",
+        "Índice de cobertura de juros",
+        "Oportunidades de crescimento"
+      ]
+    },
+    "performance": {
+      "r_squared": 0.12,
+      "r_squared_adj": 0.116,
+      "f_stat": null,
+      "outros_indicadores": null
+    },
+    "testes_diagnosticos": [
+      "VIF",
+      "teste de White"
+    ],
+    "principais_achados": [
+      "Maior heterogeneidade da dívida está relacionada a menor custo de capital de terceiros.",
+      "Relação negativa entre heterogeneidade e custo de capital é mais intensa para empresas com altos custos de agência."
+    ],
+    "limitacoes_mencionadas": [
+      "Limitações nas proxies para mensuração do grau de heterogeneidade da dívida.",
+      "Proxy EXCL90 pode não capturar o efeito dos diferentes graus de heterogeneidade."
+    ],
+    "_source_file": "A_heterogeneidade_da_estrutura_de_divida_reduz_o_custo_de_capital.pdf"
+  },
+  {
+    "titulo": "Financing Constraints and Corporate Investment",
+    "autores": [
+      "Steven M. Fazzari",
+      "R. Glenn Hubbard",
+      "Bruce C. Petersen",
+      "Alan S. Blinder",
+      "James M. Poterba"
+    ],
+    "ano": 1988,
+    "pais_estudo": "Estados Unidos",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "OLS",
+      "erros_robustos": "não informado"
+    },
+    "amostra": {
+      "n_empresas": 422,
+      "n_observacoes": null,
+      "periodo": "1970-1984",
+      "tipo_empresa": "abertas"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "I/K",
+        "proxy": "investimento em planta e equipamentos dividido pelo estoque de capital no início do período"
+      },
+      "independentes_principais": [
+        {
+          "nome": "Q",
+          "coeficiente": 0.001,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "CF/K",
+          "coeficiente": 0.67,
+          "significancia": "não informado"
+        }
+      ],
+      "controles": [
+        "variáveis de controle de investimento"
+      ]
+    },
+    "performance": {
+      "r_squared": 0.55,
+      "r_squared_adj": null,
+      "f_stat": null,
+      "outros_indicadores": "não informado"
+    },
+    "testes_diagnosticos": [
+      "não informado"
+    ],
+    "principais_achados": [
+      "A sensibilidade do investimento ao fluxo de caixa é maior para empresas que retêm a maior parte de seus lucros.",
+      "As empresas com maior retenção de lucros enfrentam mais restrições financeiras."
+    ],
+    "limitacoes_mencionadas": [
+      "A amostra é limitada a empresas de manufatura.",
+      "Os resultados podem não ser generalizáveis para todos os setores."
+    ],
+    "_source_file": "Financing_Constraints_and_Corporate_Investment.pdf"
+  },
+  {
+    "titulo": "Nível de evidenciação × custo da dívida das empresas brasileiras",
+    "autores": [
+      "Gerlando Augusto Sampaio Franco de Lima"
+    ],
+    "ano": 2009,
+    "pais_estudo": "Brasil",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "Painel (EF)",
+      "erros_robustos": "sim (White)"
+    },
+    "amostra": {
+      "n_empresas": 23,
+      "n_observacoes": 115,
+      "periodo": "2000-2005",
+      "tipo_empresa": "abertas"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "custo de capital de terceiros (Kd)",
+        "proxy": "despesa financeira líquida de impostos dividida pela média dos empréstimos"
+      },
+      "independentes_principais": [
+        {
+          "nome": "nível de disclosure (ND)",
+          "coeficiente": -0.054902,
+          "significancia": "1%"
+        },
+        {
+          "nome": "ADR",
+          "coeficiente": -0.021854,
+          "significancia": "1%"
+        },
+        {
+          "nome": "taxa de endividamento (TXENDIV)",
+          "coeficiente": -0.000236,
+          "significancia": "1%"
+        },
+        {
+          "nome": "receita bruta total (RECBRUTA)",
+          "coeficiente": 0.035785,
+          "significancia": "1%"
+        },
+        {
+          "nome": "valor de mercado (VALORMERCADO)",
+          "coeficiente": -0.02321,
+          "significancia": "1%"
+        },
+        {
+          "nome": "patrimônio líquido total (PLTOTAL)",
+          "coeficiente": -0.031256,
+          "significancia": "1%"
+        }
+      ],
+      "controles": [
+        "taxa de endividamento",
+        "logaritmo do valor de mercado",
+        "logaritmo do patrimônio líquido",
+        "logaritmo da receita bruta",
+        "dummy ADR"
+      ]
+    },
+    "performance": {
+      "r_squared": 0.284884,
+      "r_squared_adj": 0.18657,
+      "f_stat": 8.569127,
+      "outros_indicadores": "Estatística Durbin-Watson: 1.753456"
+    },
+    "testes_diagnosticos": [
+      "Teste de Chow",
+      "Teste de normalidade dos resíduos",
+      "Teste de homocedasticidade"
+    ],
+    "principais_achados": [
+      "A variável dependente custo de capital de terceiros possui uma relação inversa com o nível de disclosure.",
+      "Empresas com maiores níveis de disclosure apresentam um custo de capital de terceiros menor."
+    ],
+    "limitacoes_mencionadas": [
+      "As conclusões obtidas ficaram restritas à amostra, sendo esta intencional e não-probabilística.",
+      "O custo de capital de terceiros utilizado é apenas uma estimativa."
+    ],
+    "_source_file": "Nivel_de_evidenciacao_custo_da_divida_das_empresas_brasileiras.pdf"
+  },
+  {
+    "titulo": "Do Measures of Financial Constraints Measure Financial Constraints?",
+    "autores": [
+      "Joan Farre-Mensa",
+      "Alexander Ljungqvist"
+    ],
+    "ano": 2015,
+    "pais_estudo": "Estados Unidos",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "OLS",
+      "erros_robustos": "não informado"
+    },
+    "amostra": {
+      "n_empresas": 10112,
+      "n_observacoes": 91487,
+      "periodo": "1989-2011",
+      "tipo_empresa": "abertas"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "leverage",
+        "proxy": "long-term book leverage"
+      },
+      "independentes_principais": [
+        {
+          "nome": "tax increase",
+          "coeficiente": null,
+          "significancia": "não informado"
+        }
+      ],
+      "controles": [
+        "ROA",
+        "tangibility",
+        "firm size",
+        "proxy for investment opportunities"
+      ]
+    },
+    "performance": {
+      "r_squared": null,
+      "r_squared_adj": null,
+      "f_stat": null,
+      "outros_indicadores": "não informado"
+    },
+    "testes_diagnosticos": [
+      "não informado"
+    ],
+    "principais_achados": [
+      "Firms classified as constrained do not behave as if they are constrained.",
+      "Constrained firms increase leverage in response to tax increases.",
+      "Constrained firms recycle equity similarly to unconstrained firms."
+    ],
+    "limitacoes_mencionadas": [
+      "The tests cannot definitively establish whether some group of firms is indeed constrained.",
+      "The measures may not capture the true financial constraints faced by firms."
+    ],
+    "_source_file": "Financial_Constraints_Risk.pdf"
+  },
+  {
+    "titulo": "A new measure of financial constraints applicable to private and public firms",
+    "autores": [
+      "Catharina Schauer",
+      "Ralf Elsas",
+      "Nikolas Breitkopf"
+    ],
+    "ano": 2019,
+    "pais_estudo": "Alemanha",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "Logit",
+      "erros_robustos": "sim (clusterizados a nível de firma)"
+    },
+    "amostra": {
+      "n_empresas": 723,
+      "n_observacoes": 3818,
+      "periodo": "1989-2012",
+      "tipo_empresa": "privadas"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "FinCon",
+        "proxy": "autoavaliação dos gerentes sobre a situação financeira da empresa"
+      },
+      "independentes_principais": [
+        {
+          "nome": "Size",
+          "coeficiente": -0.123,
+          "significancia": "1%"
+        },
+        {
+          "nome": "Interest coverage",
+          "coeficiente": -0.024,
+          "significancia": "1%"
+        },
+        {
+          "nome": "Profitability",
+          "coeficiente": -4.404,
+          "significancia": "1%"
+        },
+        {
+          "nome": "Cash holdings",
+          "coeficiente": -1.716,
+          "significancia": "5%"
+        }
+      ],
+      "controles": []
+    },
+    "performance": {
+      "r_squared": null,
+      "r_squared_adj": null,
+      "f_stat": null,
+      "outros_indicadores": "AUC = 0.699"
+    },
+    "testes_diagnosticos": [
+      "ROC",
+      "AUC"
+    ],
+    "principais_achados": [
+      "A nova medida de restrições financeiras (FCP index) é capaz de prever a situação financeira real das empresas.",
+      "Empresas classificadas como financeiramente restritas têm menor rentabilidade e maior dificuldade de acesso a capital."
+    ],
+    "limitacoes_mencionadas": [
+      "A amostra é limitada a empresas privadas na Alemanha, o que pode restringir a generalização dos resultados."
+    ],
+    "_source_file": "New_Evidence_on_Measuring_Financial_Constraints_Moving_Beyond_the_KZ_Index.pdf"
+  },
+  {
+    "titulo": "CAPITAL STRUCTURE IN U.S., A QUANTILE REGRESSION APPROACH WITH MACROECONOMIC IMPACTS",
+    "autores": [
+      "Andreas Kaloudis",
+      "Dimitrios Tsolis"
+    ],
+    "ano": 2023,
+    "pais_estudo": "U.S.",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "Quantile",
+      "erros_robustos": "sim (não especificado)"
+    },
+    "amostra": {
+      "n_empresas": 28793,
+      "n_observacoes": 340865,
+      "periodo": "1970-2014",
+      "tipo_empresa": "abertas"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "Debt Ratio",
+        "proxy": "book value of interest-bearing debt to total assets"
+      },
+      "independentes_principais": [
+        {
+          "nome": "Size",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Asset Structure",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Growth",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Profitability",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Non-Debt Tax Shields",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Risk",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Trade Credit",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Cash",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Financial Expenses",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Credit Supply",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Inflation",
+          "coeficiente": null,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Interest Rate",
+          "coeficiente": null,
+          "significancia": "não informado"
+        }
+      ],
+      "controles": []
+    },
+    "performance": {
+      "r_squared": null,
+      "r_squared_adj": null,
+      "f_stat": null,
+      "outros_indicadores": "não informado"
+    },
+    "testes_diagnosticos": [
+      "Hausman Test"
+    ],
+    "principais_achados": [
+      "A relação entre alavancagem e lucratividade é negativa.",
+      "A relação entre ativos tangíveis e alavancagem é positiva.",
+      "A velocidade de ajuste da alavancagem de longo prazo desacelera durante crises."
+    ],
+    "limitacoes_mencionadas": [
+      "Os resultados são específicos para os Estados Unidos.",
+      "As conclusões podem não ser aplicáveis a economias com características diferentes."
+    ],
+    "_source_file": "Capital_Structure_in_US_a_Quantile_Regression_Approach_with_Macroeconomic_Impacts.pdf"
+  },
+  {
+    "titulo": "A INFLUÊNCIA DO DISCLOSURE VOLUNTÁRIO NO CUSTO DA DÍVIDA DE FINANCIAMENTOS EM EMPRESAS LISTADAS NA BM&FBOVESPA",
+    "autores": [
+      "Claudio Marcelo Edwards Barros",
+      "Sonia Raifur Kos",
+      "Silvia Consoni",
+      "Romualdo Douglas Colauto"
+    ],
+    "ano": 2017,
+    "pais_estudo": "Brasil",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "OLS",
+      "erros_robustos": "não informado"
+    },
+    "amostra": {
+      "n_empresas": 57,
+      "n_observacoes": 171,
+      "periodo": "2010-2012",
+      "tipo_empresa": "abertas"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "custo da dívida (K)",
+        "proxy": "juros de financiamentos obtidos da Demonstração do Valor Adicionado (DVA)"
+      },
+      "independentes_principais": [
+        {
+          "nome": "Índice de Divulgação Voluntária (IDV)",
+          "coeficiente": -1.0693,
+          "significancia": "5%"
+        },
+        {
+          "nome": "Alavancagem Financeira (ALAV)",
+          "coeficiente": -0.4938,
+          "significancia": "5%"
+        },
+        {
+          "nome": "Tamanho (TAM)",
+          "coeficiente": 0.0395,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Valor de Mercado (MKV)",
+          "coeficiente": 0.0949,
+          "significancia": "10%"
+        }
+      ],
+      "controles": [
+        "Tamanho",
+        "Alavancagem financeira",
+        "Valor de Mercado"
+      ]
+    },
+    "performance": {
+      "r_squared": 0.1542,
+      "r_squared_adj": 0.1542,
+      "f_stat": 23.266,
+      "outros_indicadores": "Teste de Chow, Teste de Breusch-Pagan, Teste de Hausman"
+    },
+    "testes_diagnosticos": [
+      "Teste de Chow",
+      "Teste de Breusch-Pagan",
+      "Teste de Hausman"
+    ],
+    "principais_achados": [
+      "O nível de disclosure voluntário não influencia negativamente a magnitude da taxa de juros de financiamentos."
+    ],
+    "limitacoes_mencionadas": [
+      "A amostra apresenta viés de sobrevivência e não permite generalizações.",
+      "O uso de proxy para custo da dívida pode conter viés de superavaliação."
+    ],
+    "_source_file": "A_influencia_do_disclosure_voluntario_no_custo_da_divida_de_financiamentos_em_empresas_listadas_na_BMFBOVESPA.pdf"
+  },
+  {
+    "titulo": "Do Investment-Cash Flow Sensitivities Provide Useful Measures of Financing Constraints?",
+    "autores": [
+      "Steven N. Kaplan",
+      "Luigi Zingales"
+    ],
+    "ano": 1997,
+    "pais_estudo": "não informado",
+    "metodologia": {
+      "tipo_estudo": "empírico",
+      "modelo_estatistico": "OLS",
+      "erros_robustos": "não informado"
+    },
+    "amostra": {
+      "n_empresas": 49,
+      "n_observacoes": 719,
+      "periodo": "1970-1984",
+      "tipo_empresa": "não informado"
+    },
+    "variaveis": {
+      "dependente": {
+        "nome": "investment-cash flow sensitivity",
+        "proxy": "relação entre investimento e fluxo de caixa"
+      },
+      "independentes_principais": [
+        {
+          "nome": "cash flow",
+          "coeficiente": 0.702,
+          "significancia": "não informado"
+        },
+        {
+          "nome": "Tobin's Q",
+          "coeficiente": 0.276,
+          "significancia": "1%"
+        },
+        {
+          "nome": "debt/total capital",
+          "coeficiente": 2.071,
+          "significancia": "1%"
+        },
+        {
+          "nome": "dividends",
+          "coeficiente": -23.039,
+          "significancia": "1%"
+        },
+        {
+          "nome": "dividends restricted",
+          "coeficiente": 1.496,
+          "significancia": "1%"
+        },
+        {
+          "nome": "unrestricted retained earnings",
+          "coeficiente": -1.897,
+          "significancia": "1%"
+        },
+        {
+          "nome": "cash",
+          "coeficiente": -1.704,
+          "significancia": "1%"
+        },
+        {
+          "nome": "unused line of credit",
+          "coeficiente": -0.711,
+          "significancia": "1%"
+        }
+      ],
+      "controles": [
+        "interest coverage",
+        "debt to total capital",
+        "dividend restrictions"
+      ]
+    },
+    "performance": {
+      "r_squared": 0.201,
+      "r_squared_adj": 0.223,
+      "f_stat": null,
+      "outros_indicadores": "não informado"
+    },
+    "testes_diagnosticos": [
+      "Breusch-Pagan",
+      "VIF",
+      "Hausman"
+    ],
+    "principais_achados": [
+      "Firms classified as less financially constrained exhibit greater investment-cash flow sensitivity.",
+      "85% of firm-years showed no evidence of financing constraints.",
+      "Investment-cash flow sensitivity does not increase monotonically with financing constraints."
+    ],
+    "limitacoes_mencionadas": [
+      "Possibilidade de classificação incorreta devido a informações qualitativas.",
+      "Dependência de dados de relatórios anuais que podem não ser totalmente precisos."
+    ],
+    "_source_file": "Do_Investment_Cash_Flow_Sensitivities_Provide_Useful_Measures_of_Financing_Constraints.pdf"
+  }
+]

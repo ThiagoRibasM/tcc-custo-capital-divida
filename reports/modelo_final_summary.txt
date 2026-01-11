@@ -1,31 +1,29 @@
                             OLS Regression Results                            
 ==============================================================================
-Dep. Variable:           Kd_Ponderado   R-squared:                       0.165
-Model:                            OLS   Adj. R-squared:                  0.118
-Method:                 Least Squares   F-statistic:                     3.526
-Date:                Sun, 11 Jan 2026   Prob (F-statistic):            0.00591
-Time:                        10:43:23   Log-Likelihood:                -264.76
-No. Observations:                  95   AIC:                             541.5
-Df Residuals:                      89   BIC:                             556.8
+Dep. Variable:           Kd_Ponderado   R-squared:                       0.269
+Model:                            OLS   Adj. R-squared:                  0.237
+Method:                 Least Squares   F-statistic:                     11.76
+Date:                Sun, 11 Jan 2026   Prob (F-statistic):           3.67e-09
+Time:                        16:25:53   Log-Likelihood:                -311.13
+No. Observations:                 119   AIC:                             634.3
+Df Residuals:                     113   BIC:                             650.9
 Df Model:                           5                                         
-Covariance Type:            nonrobust                                         
-=======================================================================================
-                          coef    std err          t      P>|t|      [0.025      0.975]
----------------------------------------------------------------------------------------
-const                  15.4777      2.100      7.371      0.000      11.305      19.650
-Alavancagem_Total       3.7745      2.201      1.715      0.090      -0.599       8.148
-Proporcao_Divida_LP    -5.6485      2.136     -2.644      0.010      -9.893      -1.404
-Cobertura_Juros         0.0005      0.000      1.658      0.101      -0.000       0.001
-Divida_EBITDA           0.0005      0.000      1.740      0.085   -7.61e-05       0.001
-IHH_Tipo               -2.5117      1.553     -1.618      0.109      -5.597       0.573
+Covariance Type:                  HC3                                         
+=====================================================================================
+                        coef    std err          z      P>|z|      [0.025      0.975]
+-------------------------------------------------------------------------------------
+const                23.3811      3.311      7.061      0.000      16.891      29.871
+Alavancagem_Total     5.5982      1.588      3.526      0.000       2.487       8.710
+Liquidez_Imediata    -1.4374      0.950     -1.513      0.130      -3.299       0.425
+Tamanho              -0.7556      0.218     -3.460      0.001      -1.184      -0.328
+Tangibilidade        -2.8713      1.291     -2.224      0.026      -5.402      -0.341
+IHH_Indexador        -1.8527      0.869     -2.133      0.033      -3.555      -0.150
 ==============================================================================
-Omnibus:                        0.494   Durbin-Watson:                   0.461
-Prob(Omnibus):                  0.781   Jarque-Bera (JB):                0.565
-Skew:                           0.164   Prob(JB):                        0.754
-Kurtosis:                       2.814   Cond. No.                     1.10e+04
+Omnibus:                        0.036   Durbin-Watson:                   0.634
+Prob(Omnibus):                  0.982   Jarque-Bera (JB):                0.035
+Skew:                          -0.027   Prob(JB):                        0.983
+Kurtosis:                       2.936   Cond. No.                         173.
 ==============================================================================
 
 Notes:
-[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-[2] The condition number is large, 1.1e+04. This might indicate that there are
-strong multicollinearity or other numerical problems.
+[1] Standard Errors are heteroscedasticity robust (HC3)

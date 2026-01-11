@@ -1,0 +1,97 @@
+{
+  "model": {
+    "version": "1.0",
+    "date": "2026-01-11",
+    "r_squared": 0.269,
+    "r_squared_adj": 0.237,
+    "f_statistic": 11.76,
+    "f_pvalue": 3.67e-09,
+    "n_observations": 119,
+    "n_features": 5,
+    "cov_type": "HC3",
+    "target": "Kd_Ponderado"
+  },
+  "coefficients": [
+    {
+      "variable": "const",
+      "coef": 23.3811,
+      "std_err": 3.311,
+      "z": 7.061,
+      "pvalue": 0.0,
+      "ci_lower": 16.891,
+      "ci_upper": 29.871
+    },
+    {
+      "variable": "Alavancagem_Total",
+      "coef": 5.5982,
+      "std_err": 1.588,
+      "z": 3.526,
+      "pvalue": 0.0,
+      "ci_lower": 2.487,
+      "ci_upper": 8.71
+    },
+    {
+      "variable": "Liquidez_Imediata",
+      "coef": -1.4374,
+      "std_err": 0.95,
+      "z": -1.513,
+      "pvalue": 0.13,
+      "ci_lower": -3.299,
+      "ci_upper": 0.425
+    },
+    {
+      "variable": "Tamanho",
+      "coef": -0.7556,
+      "std_err": 0.218,
+      "z": -3.46,
+      "pvalue": 0.001,
+      "ci_lower": -1.184,
+      "ci_upper": -0.328
+    },
+    {
+      "variable": "Tangibilidade",
+      "coef": -2.8713,
+      "std_err": 1.291,
+      "z": -2.224,
+      "pvalue": 0.026,
+      "ci_lower": -5.402,
+      "ci_upper": -0.341
+    },
+    {
+      "variable": "IHH_Indexador",
+      "coef": -1.8527,
+      "std_err": 0.869,
+      "z": -2.133,
+      "pvalue": 0.033,
+      "ci_lower": -3.555,
+      "ci_upper": -0.15
+    }
+  ],
+  "diagnostics": {
+    "normality": {
+      "jarque_bera_stat": 0.035,
+      "jarque_bera_pval": 0.983,
+      "omnibus_stat": 0.036,
+      "omnibus_pval": 0.982,
+      "skewness": -0.027,
+      "kurtosis": 2.936
+    },
+    "heteroscedasticity": {
+      "breusch_pagan_pval": 0.143,
+      "action": "HC3 robust errors applied"
+    },
+    "autocorrelation": {
+      "durbin_watson": 0.634,
+      "note": "Cross-section data, DW less relevant"
+    },
+    "condition_number": 173
+  },
+  "preprocessing": {
+    "imputation": "KNN (k=5, weighted by distance)",
+    "winsorization": "1%-99% on all features",
+    "outlier_removal": "Cook's Distance > 4/n (7 observations removed)",
+    "vif_threshold": 5.0,
+    "stepwise_pvalue": 0.15
+  },
+  "timestamp": "2026-01-11T16:30:23.347699"
+}
