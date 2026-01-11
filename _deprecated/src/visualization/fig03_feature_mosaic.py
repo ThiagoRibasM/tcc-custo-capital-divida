@@ -53,7 +53,7 @@ ASSETS_DIR = Path(__file__).parent / "assets"
 
 def load_data():
     """Carrega dados."""
-    return pd.read_csv(CONSOLIDATED_PATH / "tabela_features.csv")
+    return pd.read_csv(CONSOLIDATED_PATH / "indicadores_financeiros_completos.csv")
 
 def add_icon(ax, filename, xy, zoom=0.15):
     """Adiciona ícone ao plot."""
@@ -79,10 +79,10 @@ def draw_methodology_panel(ax):
     ax.text(0.0, 1.0, "(a) Metodologia de Extração", fontsize=11, fontweight='bold', color=COLORS['primary'], va='top')
     
     steps = [
-        ("Relatórios\nDFP/Excel", "pdf_icon.png"),
-        ("Extração\nDireta", "settings_icon.png"),
-        ("Mapeamento\nCVM", "ai_icon.png"),
-        ("Limpeza &\nSanidade", "clean_icon.png"),
+        ("Relatórios\nDFP/CVM", "pdf_icon.png"),
+        ("Processamento\nTextual", "settings_icon.png"),
+        ("Identificação\n(Regex)", "ai_icon.png"),
+        ("Limpeza &\nPadronização", "clean_icon.png"),
         ("Cálculo de\nFeatures", "calc_icon.png")
     ]
     
@@ -120,11 +120,11 @@ def draw_taxonomy_panel(ax):
     
     cards = [
         ("1. Alavancagem", ["Divida / Ativo", "Divida / PL", "Alavancagem Total"]),
-        ("2. Liquidez", ["Liquidez Corrente", "Liquidez Imediata", "Cobertura Caixa"]),
+        ("2. Liquidez", ["Liquidez Corrente", "Liquidez Seca", "Cobertura Caixa"]),
         ("3. Rentabilidade", ["ROA", "ROE", "Margem EBITDA"]),
-        ("4. Estrutura/Perfil", ["Tamanho (Log)", "Tangibilidade", "% Curto Prazo"]),
-        ("5. Heterogeneidade", ["IHH Indexador", "IHH Tipo", "Indice Diversif."]),
-        ("6. Cobertura", ["Cobertura Juros", "Divida / EBITDA", "Geração Caixa Op"])
+        ("4. Restrições (KZ)", ["Índice KZ", "FCF / Ativo", "Restrição Simpl."]),
+        ("5. Heterogeneidade", ["HHI Indexador", "Diversif. Fontes", "HHI Tipo"]),
+        ("6. Prazo & Perfil", ["Prazo Médio (Dias)", "% Curto Prazo", "% Longo Prazo"])
     ]
     
     cols = 3
@@ -194,41 +194,36 @@ def draw_stats_panel(fig, gs_base, df):
         ('Divida_Total_Ativo', 'Alavancagem\n(Debt/Asset)'),
         ('Liquidez_Corrente', 'Liquidez\nCorrente'),
         ('ROA', 'Rentabilidade\n(ROA)'),
-        ('Tamanho', 'Tamanho\n(Log Ativo)'),
-        ('IHH_Indexador', 'Concentração\n(IHH Indexador)'),
-        ('Proporcao_Divida_CP', 'Perfil\n(% Curto Prazo)')
+        ('KZ_Index', 'Restrições\n(Índice KZ)'),
+        ('Indice_Diversificacao', 'Diversificação\n(1-HHI)'),
+        ('Prazo_Medio_Divida', 'Prazo Médio\n(Dias)')
     ]
     
     for i, (col, label) in enumerate(features):
         ax = fig.add_subplot(gs_inner[i // 3, i % 3])
         
-        if col in df.columns:
-            data = df[col].replace([np.inf, -np.inf], np.nan).dropna()
+        data = df[col].replace([np.inf, -np.inf], np.nan).dropna()
+        q1, q99 = data.quantile([0.01, 0.99])
+        data = data.clip(q1, q99)
+        
+        # Violin simplificado e limpo
+        parts = ax.violinplot(data, vert=True, showextrema=False, widths=0.7)
+        for pc in parts['bodies']:
+            pc.set_facecolor(COLORS['accent'])
+            pc.set_alpha(0.8) # Mais opaco para contraste
+            pc.set_edgecolor(COLORS['primary']) # Borda escura
             
-            # Winsorização leve para visualização (1%-99%)
-            q1, q99 = data.quantile([0.01, 0.99])
-            data = data.clip(q1, q99)
-            
-            # Violin simplificado e limpo
-            parts = ax.violinplot(data, vert=True, showextrema=False, widths=0.7)
-            for pc in parts['bodies']:
-                pc.set_facecolor(COLORS['accent'])
-                pc.set_alpha(0.8) # Mais opaco para contraste
-                pc.set_edgecolor(COLORS['primary']) # Borda escura
-                
-            # Boxplot simplificado (Preto)
-            ax.boxplot(data, vert=True, widths=0.05, patch_artist=False,
-                       boxprops=dict(linewidth=1.2, color='black'),
-                       whiskerprops=dict(linewidth=1.2, color='black'),
-                       capprops=dict(linewidth=1.2, color='black'),
-                       medianprops=dict(linewidth=1.5, color='white'), 
-                       showfliers=False)
-            
-            # Mediana vermelha
-            m = data.median()
-            ax.plot([1], [m], color=COLORS['highlight'], marker='o', markersize=3)
-        else:
-            ax.text(0.5, 0.5, "Dados não\ndisponíveis", ha='center', va='center')
+        # Boxplot simplificado (Preto)
+        ax.boxplot(data, vert=True, widths=0.05, patch_artist=False,
+                   boxprops=dict(linewidth=1.2, color='black'),
+                   whiskerprops=dict(linewidth=1.2, color='black'),
+                   capprops=dict(linewidth=1.2, color='black'),
+                   medianprops=dict(linewidth=1.5, color='white'), # Mediana branca no meio do box preto se tiver fill, mas aqui é linha. Vamos por vermelha.
+                   showfliers=False)
+        
+        # Mediana vermelha
+        m = data.median()
+        ax.plot([1], [m], color=COLORS['highlight'], marker='o', markersize=3)
         
         ax.set_title(label, fontsize=9, color=COLORS['text'], fontweight='bold') # Title Darker
         ax.set_xticks([])
@@ -237,7 +232,6 @@ def draw_stats_panel(fig, gs_base, df):
         ax.spines['left'].set_visible(False)
         ax.spines['bottom'].set_visible(False)
         ax.tick_params(left=False, labelsize=8, labelcolor='black')
-
 
 
 # -----------------------------------------------------------------------------

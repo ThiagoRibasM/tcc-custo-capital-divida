@@ -14,16 +14,9 @@ DATA_EXTERNAL = PROJECT_ROOT / "data" / "external"
 
 # Paths específicos
 DFP_2024_PATH = DATA_RAW / "dfp_2024"
-DFP_NOVO_MERCADO_PATH = DFP_2024_PATH / "DFPs_CVM" / "Novo_Mercado"
-
-# Paths de PDFs extraídos (estrutura unificada)
-EXTRACTED_PDFS_DFP = DATA_RAW / "extracted_pdfs" / "dfp"
 
 # Paths de processamento
-LLM_EXTRACTIONS_PATH = DATA_PROCESSED / "llm_extractions"
-LLM_EXTRACTIONS_DFP = LLM_EXTRACTIONS_PATH / "dfp"
 CONSOLIDATED_PATH = DATA_PROCESSED / "consolidated"
-FINANCIAL_EXTRACTIONS_PATH = CONSOLIDATED_PATH / "financial_extractions"
 REFERENCES_PATH = DATA_EXTERNAL / "references"
 
 # Paths de notebooks (para referência)
@@ -37,10 +30,7 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 def ensure_dirs():
     """Cria todos os diretórios necessários se não existirem."""
     for path in [DATA_RAW, DATA_PROCESSED, DATA_EXTERNAL, 
-                 LLM_EXTRACTIONS_PATH, LLM_EXTRACTIONS_DFP,
                  CONSOLIDATED_PATH, REFERENCES_PATH,
-                 EXTRACTED_PDFS_DFP,
-                 FINANCIAL_EXTRACTIONS_PATH,
                  REPORTS_DIR, FIGURES_DIR]:
         path.mkdir(parents=True, exist_ok=True)
 

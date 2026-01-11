@@ -1,0 +1,31 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:           Kd_Ponderado   R-squared:                       0.165
+Model:                            OLS   Adj. R-squared:                  0.118
+Method:                 Least Squares   F-statistic:                     3.526
+Date:                Sun, 11 Jan 2026   Prob (F-statistic):            0.00591
+Time:                        10:43:23   Log-Likelihood:                -264.76
+No. Observations:                  95   AIC:                             541.5
+Df Residuals:                      89   BIC:                             556.8
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+=======================================================================================
+                          coef    std err          t      P>|t|      [0.025      0.975]
+---------------------------------------------------------------------------------------
+const                  15.4777      2.100      7.371      0.000      11.305      19.650
+Alavancagem_Total       3.7745      2.201      1.715      0.090      -0.599       8.148
+Proporcao_Divida_LP    -5.6485      2.136     -2.644      0.010      -9.893      -1.404
+Cobertura_Juros         0.0005      0.000      1.658      0.101      -0.000       0.001
+Divida_EBITDA           0.0005      0.000      1.740      0.085   -7.61e-05       0.001
+IHH_Tipo               -2.5117      1.553     -1.618      0.109      -5.597       0.573
+==============================================================================
+Omnibus:                        0.494   Durbin-Watson:                   0.461
+Prob(Omnibus):                  0.781   Jarque-Bera (JB):                0.565
+Skew:                           0.164   Prob(JB):                        0.754
+Kurtosis:                       2.814   Cond. No.                     1.10e+04
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.1e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
