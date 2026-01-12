@@ -239,8 +239,9 @@ def plot_diagnostics(model, output_path):
     3. Normalidade (Normality): Q-Q Plot
     4. Influência (Robustness): Distância de Cook
     """
-    fig = plt.figure(figsize=(12, 10))
-    fig.suptitle('Figura 5: Diagnóstico do Modelo Final OLS', fontsize=12, fontweight='bold', y=0.96)
+    fig = plt.figure(figsize=(9, 9))
+    # Título removido - será no caption do LaTeX
+    # fig.suptitle('Figura 5: Diagnóstico do Modelo Final OLS', fontsize=12, fontweight='bold', y=0.96)
     
     # Grid 2x2
     gs = fig.add_gridspec(2, 2, wspace=0.3, hspace=0.3)
@@ -264,10 +265,10 @@ def plot_diagnostics(model, output_path):
     sns.regplot(x=y_pred, y=y_true, scatter=False, ax=ax1, color='blue', truncate=False, 
                 line_kws={'lw': 1, 'alpha': 0.5, 'label': 'Tendência Real'})
 
-    ax1.set_title('(a) Qualidade do Ajuste ($R^2$ Visual)', fontsize=11, fontweight='bold')
+    ax1.set_title('(a) Qualidade do Ajuste ($R^2$ Visual)', fontsize=13, fontweight='bold')
     ax1.set_xlabel('Kd Predito (%)')
     ax1.set_ylabel('Kd Observado (%)')
-    ax1.legend(fontsize=8)
+    ax1.legend(fontsize=11)
     ax1.grid(True, alpha=0.2)
     
     # ---------------------------------------------------------
@@ -283,7 +284,7 @@ def plot_diagnostics(model, output_path):
     sns.regplot(x=y_pred, y=resid, scatter=False, lowess=True, ax=ax2, color='blue', 
                 line_kws={'lw': 1.5, 'alpha': 0.8})
                 
-    ax2.set_title('(b) Homocedasticidade & Linearidade', fontsize=11, fontweight='bold')
+    ax2.set_title('(b) Homocedasticidade & Linearidade', fontsize=13, fontweight='bold')
     ax2.set_xlabel('Kd Predito')
     ax2.set_ylabel('Resíduos')
     ax2.grid(True, alpha=0.2)
@@ -297,7 +298,7 @@ def plot_diagnostics(model, output_path):
     ax3.scatter(osm, osr, alpha=0.6, edgecolor='k', color=styles.COLORS['secondary'])
     ax3.plot(osm, slope * osm + intercept, color=styles.COLORS['primary'], lw=1.5, linestyle='-')
     
-    ax3.set_title(f'(c) Normalidade dos Resíduos ($R^2$={r**2:.2f})', fontsize=11, fontweight='bold')
+    ax3.set_title(f'(c) Normalidade dos Resíduos ($R^2$={r**2:.2f})', fontsize=13, fontweight='bold')
     ax3.set_xlabel('Quantis Teóricos (Normal)')
     ax3.set_ylabel('Quantis Observados')
     ax3.grid(True, alpha=0.2)
@@ -328,12 +329,12 @@ def plot_diagnostics(model, output_path):
     
     for idx in top_3_indices:
         if cooks[idx] > threshold:
-            ax4.text(idx, cooks[idx], f'{idx}', fontsize=8, ha='right', va='bottom', fontweight='bold')
+            ax4.text(idx, cooks[idx], f'{idx}', fontsize=11, ha='right', va='bottom', fontweight='bold')
 
-    ax4.set_title('(d) Observações Influentes (Cook\'s D)', fontsize=11, fontweight='bold')
+    ax4.set_title('(d) Observações Influentes (Cook\'s D)', fontsize=13, fontweight='bold')
     ax4.set_xlabel('Índice da Empresa')
     ax4.set_ylabel('Distância de Cook')
-    ax4.legend(fontsize=8)
+    ax4.legend(fontsize=11)
     ax4.grid(True, alpha=0.2)
     
     # Salvar

@@ -1,20 +1,61 @@
-\section{Resultados das Análises}
+\section{Resultados}
 
-\textit{[Esta seção deve conter as tabelas geradas pelos scripts Python.]}
+Esta seção apresenta os resultados da estimação do modelo econométrico especificado na metodologia, com foco na análise dos coeficientes estimados, validação dos pressupostos estatísticos e discussão das implicações para a teoria de estrutura de capital.
 
-Os resultados preliminares da classificação via LLM indicam que aproximadamente X\% da amostra apresenta indícios textuais de restrição financeira.
+\subsection{Estimação do Modelo}
+
+O modelo final, estimado por OLS com erros-padrão robustos (HC3), apresentou poder explicativo moderado ($R^2 = 26.9\%$, $R^2_{ajustado} = 23.7\%$), com estatística F significativa ($F = 11.76$, $p < 0.001$). A Tabela \ref{tab:regression} sintetiza os coeficientes estimados.
 
 \begin{table}[H]
-    \centering
-    \caption{Sensibilidade do Investimento ao Fluxo de Caixa}
-    \begin{tabular}{lcc}
-        \hline
-         & (1) Modelo Base & (2) Com Interação LLM \\
-        \hline
-        Fluxo de Caixa / K & 0.000*** & 0.000*** \\
-        Q de Tobin & 0.000** & 0.000** \\
-        Restrita * Fluxo de Caixa / K & - & 0.000* \\
-        \hline
-    \end{tabular}
-    \label{tab:regressao}
+\centering
+\caption{Resultados da Regressão OLS - Determinantes do $K_d$}
+\label{tab:regression}
+\begin{tabular}{lrrrl}
+\hline
+\textbf{Variável} & \textbf{Coef.} & \textbf{Erro Padrão} & \textbf{z} & \textbf{Sig.} \\
+\hline
+Constante & 23.38 & 3.31 & 7.06 & *** \\
+Alavancagem Total & 5.60 & 1.59 & 3.53 & *** \\
+Tamanho (Log Ativo) & -0.76 & 0.22 & -3.46 & *** \\
+Tangibilidade & -2.87 & 1.29 & -2.22 & ** \\
+HHI Indexador & -1.85 & 0.87 & -2.13 & ** \\
+Liquidez Imediata & -1.44 & 0.95 & -1.51 & \\
+\hline
+\multicolumn{5}{l}{\footnotesize $R^2 = 0.269$; $R^2_{adj} = 0.237$; $N = 119$; Erros HC3} \\
+\multicolumn{5}{l}{\footnotesize *** p<0.01, ** p<0.05, * p<0.10} \\
+\hline
+\end{tabular}
 \end{table}
+
+\subsection{Interpretação dos Coeficientes}
+
+Os resultados corroboram as hipóteses derivadas da teoria de estrutura de capital:
+
+Em relação à Alavancagem Total ($\beta = +5.60$, $p < 0.01$), os resultados confirmam a teoria de trade-off, indicando que empresas mais alavancadas enfrentam maior custo de dívida. Economicamente, cada aumento de 10 pontos percentuais na alavancagem está associado a um incremento de aproximadamente 0.56 p.p. no custo de capital de terceiros, refletindo o prêmio de risco exigido pelos credores para compensar a maior probabilidade de insolvência.
+
+O Tamanho da firma ($\beta = -0.76$, $p < 0.01$) apresentou relação negativa com o custo da dívida, consistente com a literatura de assimetria informacional \citep{myers1984}. Firmas de maior porte tendem a possuir maior transparência, melhor rating de crédito implícito e maior poder de barganha junto às instituições financeiras, o que justifica o menor custo de captação.
+
+A Tangibilidade ($\beta = -2.87$, $p < 0.05$) também se mostrou um determinante redutor do custo de dívida. A proporção de ativos imobilizados suporta a hipótese de que a disponibilidade de garantias reais (collateral) diminui o risco percebido pelos credores e, consequentemente, reduz a taxa de juros exigida nas operações de crédito.
+
+Uma contribuição relevante deste estudo é a análise do HHI de Indexadores ($\beta = -1.85$, $p < 0.05$), que apresentou relação negativa com o $K_d$. Esse resultado sugere que empresas com fontes de financiamento mais homogêneas (concentradas em poucos indexadores) podem se beneficiar de relacionamentos mais sólidos com credores específicos (Relationship Banking), obtendo condições contratuais mais favoráveis.
+
+Por fim, a Liquidez Imediata ($\beta = -1.44$, $p = 0.13$), embora apresente sinal consistente com a teoria — onde maior liquidez reduziria o risco de default —, não atingiu significância estatística convencional. Isso sugere que o efeito da liquidez pode estar sendo capturado parcialmente por outras métricas correlacionadas no modelo ou que, para empresas do Novo Mercado, a liquidez de curtíssimo prazo é menos determinante para o custo estrutural da dívida.
+
+\subsection{Validação dos Pressupostos}
+
+A Figura \ref{fig:diagnostics} apresenta os diagnósticos visuais do modelo, conforme protocolo definido na metodologia.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig05_regression_diagnostics.png}
+    \caption{Diagnósticos do Modelo Final OLS}
+    \label{fig:diagnostics}
+\end{figure}
+
+A visualização da qualidade do ajuste (Painel a) indica uma distribuição equilibrada dos valores observados ao redor da linha de 45 graus, consistente com o poder explicativo de 26.9\%. A dispersão natural reflete a influência de fatores não observáveis, como riscos idiossincráticos e condições macroeconômicas latentes, esperados em estudos deste tipo.
+
+Quanto aos resíduos, o Painel (b) não apresenta padrões sistemáticos (como formato de funil) ou curvaturas relevantes, sugerindo que as premissas de homocedasticidade e linearidade foram atendidas. A estabilidade da linha de tendência próxima a zero confirma que a especificação do modelo é adequada.
+
+Além disso, o comportamento dos erros aproxima-se satisfatoriamente de uma distribuição normal, como mostra a aderência dos pontos à linha teórica no gráfico Q-Q (Painel c). Esse resultado, confirmado pelo teste de Jarque-Bera ($p = 0.98$), valida os testes de hipótese e os intervalos de confiança utilizados.
+
+Por fim, a robustez das estimativas é reforçada pela análise de influência. Após o tratamento dos dados via Distância de Cook, nenhuma observação remanescente ultrapassa o limite crítico (Painel d), o que mitiga o risco de que os coeficientes sejam distorcidos por casos extremos isolados.

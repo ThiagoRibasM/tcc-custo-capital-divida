@@ -46,13 +46,13 @@ COLORS = {
 
 FONTS = {
     'family': 'serif',
-    'title': 15,
+    'title': 14,
     'subtitle': 12,
     'axis_label': 11,
     'tick': 10,
-    'legend': 9,
-    'annotation': 9,
-    'note': 8,
+    'legend': 10,
+    'annotation': 10,
+    'note': 10,
 }
 
 # =============================================================================

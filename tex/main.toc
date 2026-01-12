@@ -1,0 +1,25 @@
+\babel@toc {brazilian}{}\relax 
+\contentsline {section}{\numberline {1}Introdução}{5}{}%
+\contentsline {section}{\numberline {2}Metodologia}{6}{}%
+\contentsline {subsection}{\numberline {2.1}Processamento de Texto com LLMs}{6}{}%
+\contentsline {subsection}{\numberline {2.2}Seleção da Amostra e Filtros}{7}{}%
+\contentsline {subsection}{\numberline {2.3}Cálculo do Custo de Capital de Terceiros Ponderado ($K_d$)}{7}{}%
+\contentsline {subsection}{\numberline {2.4}Cálculo dos Indicadores Financeiros}{9}{}%
+\contentsline {subsection}{\numberline {2.5}Modelo Econométrico}{11}{}%
+\contentsline {subsubsection}{\numberline {2.5.1}Seleção de Variáveis}{11}{}%
+\contentsline {subsubsection}{\numberline {2.5.2}Tratamento de Outliers}{12}{}%
+\contentsline {subsubsection}{\numberline {2.5.3}Correção de Heterocedasticidade}{12}{}%
+\contentsline {subsubsection}{\numberline {2.5.4}Implementação Computacional}{12}{}%
+\contentsline {section}{\numberline {3}Resultados}{13}{}%
+\contentsline {subsection}{\numberline {3.1}Estimação do Modelo}{13}{}%
+\contentsline {subsection}{\numberline {3.2}Interpretação dos Coeficientes}{13}{}%
+\contentsline {subsection}{\numberline {3.3}Validação dos Pressupostos}{14}{}%
+\contentsline {section}{\numberline {4}Discussão}{17}{}%
+\contentsline {subsection}{\numberline {4.1}Síntese dos Achados}{17}{}%
+\contentsline {subsection}{\numberline {4.2}Comparação com a Literatura}{17}{}%
+\contentsline {subsubsection}{\numberline {4.2.1}Análise do Poder Explicativo}{18}{}%
+\contentsline {subsubsection}{\numberline {4.2.2}Variáveis Robustas na Literatura}{19}{}%
+\contentsline {subsubsection}{\numberline {4.2.3}Contribuição Diferenciada: HHI de Indexadores}{20}{}%
+\contentsline {subsection}{\numberline {4.3}Limitações}{20}{}%
+\contentsline {subsection}{\numberline {4.4}Implicações Práticas}{20}{}%
+\contentsline {section}{\numberline {5}Considerações Finais}{21}{}%

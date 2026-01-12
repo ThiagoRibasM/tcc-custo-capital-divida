@@ -181,52 +181,32 @@ def create_comprehensive_figure(output_path=None):
     studies_sorted = sorted(STUDIES, key=lambda x: x['r_squared'], reverse=True)
     
     # Criar figura com GridSpec
-    fig = plt.figure(figsize=(14, 10))
-    gs = GridSpec(2, 2, figure=fig, height_ratios=[1.1, 1], 
-                  width_ratios=[1, 1.4], hspace=0.35, wspace=0.3)
+    # Criar figura com GridSpec (Reduzido de 14,10 para 9,8 para manter legibilidade das fontes em A4)
+    # Largura A4 texto ~ 6.3 in. Redução será de 9 -> 6.3 (0.7x).
+    # Fonte 10pt virará 7pt. Então precisamos de fonte ~13-14 para ter 10pt visual.
+    # Fonte 10pt virará 7pt. Então precisamos de fonte ~13-14 para ter 10pt visual.
+    # Aumentando altura para 10 para dar espaço aos rótulos rotacionados do Painel B
+    # Fonte 10pt virará 7pt. Então precisamos de fonte ~13-14 para ter 10pt visual.
+    # Aumentando altura para 10 para dar espaço aos rótulos rotacionados do Painel B
+    fig = plt.figure(figsize=(9, 10))
+    # wspace reduzido drasticamente (0.05) para conectar visualmente os painéis A e B
+    # hspace mantido em 0.6 para proteger o título inferior
+    # Invertendo ratios: Heatmap (Esq) precisa de mais largura que Bars (Dir)
+    # Reduzindo altura da linha superior (A/B) em 10% (0.9 vs 1.0)
+    gs = GridSpec(2, 2, figure=fig, height_ratios=[0.9, 1], 
+                  width_ratios=[1.3, 1], hspace=0.6, wspace=0.08)
     
-    # Painel A: R² Comparison (bar chart horizontal)
+    # Painel A: Feature Matrix (heatmap) - Agora à Esquerda
     ax_a = fig.add_subplot(gs[0, 0])
     
-    # Painel B: Feature Matrix (heatmap)
-    ax_b = fig.add_subplot(gs[0, 1])
+    # Painel B: R² Comparison (bar chart horizontal) - Agora à Direita (sharey com A)
+    ax_b = fig.add_subplot(gs[0, 1], sharey=ax_a)
     
     # Painel C: Bubble Chart (N vs R² vs Features)
     ax_c = fig.add_subplot(gs[1, :])
     
     # =========================================================================
-    # PAINEL A: Comparação de R² com a Literatura
-    # =========================================================================
-    labels = [s['short'] for s in studies_sorted]
-    r2_values = [s['r_squared'] * 100 for s in studies_sorted]
-    colors = [COLOR_TCC if s['tipo'] == 'tcc' else COLOR_BENCH for s in studies_sorted]
-    
-    y_pos = np.arange(len(labels))
-    bar_height = 0.55
-    
-    # R² (barras principais)
-    bars = ax_a.barh(y_pos, r2_values, height=bar_height, color=colors, 
-                     edgecolor='white', alpha=0.9)
-    
-    ax_a.set_yticks(y_pos)
-    ax_a.set_yticklabels(labels, fontweight='bold')
-    ax_a.set_xlabel('Coeficiente de Determinação (%)')
-    ax_a.set_xlim(0, 35)
-    ax_a.invert_yaxis()
-    
-    # Valores nas barras
-    for i, (bar, study) in enumerate(zip(bars, studies_sorted)):
-        width = bar.get_width()
-        ax_a.text(width + 0.5, bar.get_y() + bar.get_height()/2,
-                 f'{width:.1f}%', ha='left', va='center',
-                 fontweight='bold' if study['tipo'] == 'tcc' else 'normal',
-                 fontsize=9, color=colors[i])
-    
-    ax_a.set_title('(a) Poder Explicativo (R²)', fontweight='bold', loc='left', pad=10)
-    ax_a.xaxis.grid(True, linestyle='--', alpha=0.4)
-    
-    # =========================================================================
-    # PAINEL B: Matriz de Features (Heatmap)
+    # PAINEL A: Matriz de Features (Heatmap) - AGORA PAINEL A (ESQUERDA)
     # =========================================================================
     # Criar matriz de features
     feature_matrix = []
@@ -244,23 +224,60 @@ def create_comprehensive_figure(output_path=None):
             value = feature_matrix[i, j]
             if value == 1:
                 color = COLOR_TCC if studies_sorted[i]['tipo'] == 'tcc' else COLOR_BENCH
-                ax_b.add_patch(plt.Rectangle((j-0.4, i-0.35), 0.8, 0.7, 
+                ax_a.add_patch(plt.Rectangle((j-0.4, i-0.35), 0.8, 0.7, 
                               facecolor=color, edgecolor='white', linewidth=1.5))
-                ax_b.text(j, i, '●', ha='center', va='center', 
-                         color='white', fontweight='bold', fontsize=12)
+                ax_a.text(j, i, '●', ha='center', va='center', 
+                         color='white', fontweight='bold', fontsize=14)
             else:
-                ax_b.add_patch(plt.Rectangle((j-0.4, i-0.35), 0.8, 0.7, 
+                ax_a.add_patch(plt.Rectangle((j-0.4, i-0.35), 0.8, 0.7, 
                               facecolor=COLOR_GRID, edgecolor='white', linewidth=1.5))
     
-    ax_b.set_xlim(-0.5, len(FEATURE_NAMES)-0.5)
-    ax_b.set_ylim(-0.5, len(studies_sorted)-0.5)
-    ax_b.set_xticks(range(len(FEATURE_NAMES)))
-    ax_b.set_xticklabels(FEATURE_NAMES, rotation=45, ha='right', fontsize=8)
-    ax_b.set_yticks(range(len(study_labels)))
-    ax_b.set_yticklabels(study_labels, fontsize=9)
-    ax_b.invert_yaxis()
-    ax_b.set_title('(b) Variáveis Determinantes Utilizadas', fontweight='bold', loc='left', pad=10)
-    ax_b.tick_params(axis='both', which='both', length=0)
+    ax_a.set_xlim(-0.5, len(FEATURE_NAMES)-0.5)
+    ax_a.set_ylim(-0.5, len(studies_sorted)-0.5)
+    ax_a.set_xticks(range(len(FEATURE_NAMES)))
+    ax_a.set_xticklabels(FEATURE_NAMES, rotation=45, ha='right', fontsize=11)
+    
+    # Labels do Eixo Y no Heatmap (Esquerda)
+    ax_a.set_yticks(range(len(study_labels)))
+    ax_a.set_yticklabels(study_labels, fontsize=11)
+    ax_a.invert_yaxis()
+    
+    ax_a.set_title('(a) Variáveis Determinantes Utilizadas', fontweight='bold', loc='left', pad=10)
+    ax_a.tick_params(axis='both', which='both', length=0)
+
+    # =========================================================================
+    # PAINEL B: Comparação de R² - AGORA PAINEL B (DIREITA)
+    # =========================================================================
+    labels = [s['short'] for s in studies_sorted]
+    r2_values = [s['r_squared'] * 100 for s in studies_sorted]
+    colors = [COLOR_TCC if s['tipo'] == 'tcc' else COLOR_BENCH for s in studies_sorted]
+    
+    y_pos = np.arange(len(labels))
+    bar_height = 0.55
+    
+    # R² (barras principais)
+    bars = ax_b.barh(y_pos, r2_values, height=bar_height, color=colors, 
+                     edgecolor='white', alpha=0.9)
+    
+    # Remover labels do eixo Y (ShareY cuida disso)
+    plt.setp(ax_b.get_yticklabels(), visible=False)
+    ax_b.tick_params(axis='y', which='both', length=0)
+    
+    ax_b.set_xlabel('Coeficiente de Determinação (%)')
+    ax_b.set_xlim(0, 35)
+    # ax_b.invert_yaxis() # Não precisa inverter, herda de A
+    
+    # Valores nas barras
+    for i, (bar, study) in enumerate(zip(bars, studies_sorted)):
+        width = bar.get_width()
+        ax_b.text(width + 0.5, bar.get_y() + bar.get_height()/2,
+                 f'{width:.1f}%', ha='left', va='center',
+                 fontweight='bold' if study['tipo'] == 'tcc' else 'normal',
+                 fontsize=12, color=colors[i])
+    
+    ax_b.set_title('(b) Poder Explicativo (R²)', fontweight='bold', loc='left', pad=10)
+    # Grid removido conforme solicitação
+    ax_b.grid(False)
     
     # =========================================================================
     # PAINEL C: Bubble Chart Multidimensional
@@ -293,7 +310,7 @@ def create_comprehensive_figure(output_path=None):
         ax_c.annotate(label_text,
                      xy=(study['n'], study['r_squared'] * 100),
                      xytext=offset, textcoords='offset points',
-                     fontsize=8, color='#333',
+                     fontsize=11, color='#333',
                      ha='left', va='center',
                      fontweight='bold' if study['tipo'] == 'tcc' else 'normal',
                      bbox=dict(boxstyle='round,pad=0.3', facecolor='white', 
@@ -321,14 +338,15 @@ def create_comprehensive_figure(output_path=None):
     ]
     
     ax_c.legend(handles=legend_elements, loc='lower left', 
-               framealpha=0.95, fontsize=7, ncol=1, 
+               framealpha=0.95, fontsize=11, ncol=1, 
                labelspacing=2.1, borderpad=1.2)
     
     # =========================================================================
     # TÍTULOS E ANOTAÇÕES
     # =========================================================================
-    fig.suptitle('Figura 6: Posicionamento do Modelo de Custo de Dívida (Kd) em Relação à Literatura',
-                fontsize=12, fontweight='bold', y=0.98)
+    # Título removido - será no caption do LaTeX
+    # fig.suptitle('Figura 6: Posicionamento do Modelo de Custo de Dívida (Kd) em Relação à Literatura',
+    #             fontsize=12, fontweight='bold', y=0.98)
     
     # Nota de rodapé removida conforme solicitação
     

@@ -3,8 +3,8 @@
 Dep. Variable:           Kd_Ponderado   R-squared:                       0.269
 Model:                            OLS   Adj. R-squared:                  0.237
 Method:                 Least Squares   F-statistic:                     11.76
-Date:                Sun, 11 Jan 2026   Prob (F-statistic):           3.67e-09
-Time:                        17:03:47   Log-Likelihood:                -311.13
+Date:                Mon, 12 Jan 2026   Prob (F-statistic):           3.67e-09
+Time:                        14:25:51   Log-Likelihood:                -311.13
 No. Observations:                 119   AIC:                             634.3
 Df Residuals:                     113   BIC:                             650.9
 Df Model:                           5                                         

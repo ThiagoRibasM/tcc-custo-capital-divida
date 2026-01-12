@@ -107,7 +107,7 @@ def draw_methodology_panel(ax):
         x = start_x + i * spacing
         add_icon(ax, icon_file, (x, y_pos), zoom=0.35)
         # Ajustado y_pos - 0.28 (mais 6% para baixo conforme solicitado)
-        ax.text(x, y_pos - 0.28, label, ha='center', va='top', fontsize=9, color=COLORS['text']) # Text Black
+        ax.text(x, y_pos - 0.28, label, ha='center', va='top', fontsize=10, color=COLORS['text']) # Text Black
 
 # -----------------------------------------------------------------------------
 # PAINEL B: TAXONOMIA (GRID DE CARDS)
@@ -173,12 +173,12 @@ def draw_taxonomy_panel(ax):
         ax.add_patch(header)
         
         ax.text(x + card_w/2, y + card_h - header_h/2, title, 
-                ha='center', va='center', color='white', fontweight='bold', fontsize=9, zorder=4)
+                ha='center', va='center', color='white', fontweight='bold', fontsize=10, zorder=4)
         
         # Lista
         for j, item in enumerate(items):
             iy = y + card_h - header_h - 0.06 - j * 0.075 # Mais espaçamento vertical
-            ax.text(x + 0.02, iy, f"• {item}", fontsize=8.5, color=COLORS['text'], va='top', zorder=4)
+            ax.text(x + 0.02, iy, f"• {item}", fontsize=10, color=COLORS['text'], va='top', zorder=4)
 
 # -----------------------------------------------------------------------------
 # PAINEL C: ESTATÍSTICAS
@@ -232,7 +232,7 @@ def draw_stats_panel(fig, gs_base, df):
         else:
             ax.text(0.5, 0.5, "Dados não\ndisponíveis", ha='center', va='center')
         
-        ax.set_title(label, fontsize=9, color=COLORS['text'], fontweight='bold') # Title Darker
+        ax.set_title(label, fontsize=10, color=COLORS['text'], fontweight='bold') # Title Darker
         ax.set_xticks([])
         ax.grid(axis='y', linestyle='-', alpha=0.2, color='black') # Grid preto suave
         

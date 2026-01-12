@@ -265,7 +265,7 @@ def create_figure(df, stats):
     # Nota (painel inferior - alinhado com margens)
     # =====================================================
     # Linha divisória: de CONTENT_LEFT até CONTENT_RIGHT
-    fig.add_artist(plt.Line2D([CONTENT_LEFT, CONTENT_RIGHT], [0.28, 0.28],
+    fig.add_artist(plt.Line2D([CONTENT_LEFT, CONTENT_RIGHT], [0.34, 0.34],
                               color=COLORS['secondary'], linewidth=1,
                               transform=fig.transFigure))
     
@@ -278,10 +278,10 @@ def create_figure(df, stats):
     )
     
     # Texto com wrap - largura calculada para caber entre margens
-    txt = fig.text(CONTENT_LEFT, 0.24, note_text, fontsize=12, va='top', ha='left',
-                   color=COLORS['text'], linespacing=1.4,
+    txt = fig.text(CONTENT_LEFT, 0.31, note_text, fontsize=11, va='top', ha='left',
+                   color=COLORS['text'], linespacing=1.5,
                    transform=fig.transFigure, wrap=True)
-    txt._get_wrap_line_width = lambda: fig.get_figwidth() * fig.dpi * CONTENT_WIDTH
+    txt._get_wrap_line_width = lambda: fig.get_figwidth() * fig.dpi * CONTENT_WIDTH * 0.98
     
     # Título geral removido (será no LaTeX via \caption)
     # fig.suptitle('...')
@@ -315,7 +315,7 @@ def main():
     
     # Salvar como PDF vetorial
     output_path = FIGURES_DIR / "fig02_sample_summary.pdf"
-    fig.savefig(output_path, dpi=300, bbox_inches='tight', 
+    fig.savefig(output_path, dpi=300, bbox_inches='tight', pad_inches=0.2,
                 facecolor='white', edgecolor='none', format='pdf')
     plt.close(fig)
     

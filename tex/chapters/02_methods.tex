@@ -58,7 +58,7 @@ Esta abordagem difere de proxies simplificadas como ``Despesas Financeiras / Dí
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{fig02_sample_summary.pdf}
+    \includegraphics[width=\textwidth, keepaspectratio]{fig02_sample_summary.pdf}
     \caption{Caracterização da Amostra e Distribuição do Custo de Capital de Terceiros}
     \label{fig:sample_summary}
 \end{figure}
@@ -67,17 +67,19 @@ Esta abordagem difere de proxies simplificadas como ``Despesas Financeiras / Dí
 
 Para capturar a multidimensionalidade dos determinantes do custo de dívida, foram calculados indicadores financeiros organizados em seis blocos conceituais, conforme detalhado na Tabela \ref{tab:indicadores} e ilustrado na Figura \ref{fig:feature_mosaic}.
 
-\textbf{Bloco 1 -- Alavancagem.} Indicadores de estrutura de capital que mensuram o nível de endividamento da empresa em relação a seus recursos próprios e ativos. Incluem: Dívida/Ativo Total, Dívida/Patrimônio Líquido (D/E), e Alavancagem Total ($D/(D+PL)$).
-
-\textbf{Bloco 2 -- Liquidez.} Indicadores que avaliam a capacidade de pagamento de curto prazo, incluindo Liquidez Corrente (AC/PC) e Liquidez Imediata (Caixa/PC).
-
-\textbf{Bloco 3 -- Rentabilidade.} Métricas de geração de valor e eficiência operacional: ROA, ROE, Margem EBITDA e Margem Líquida.
-
-\textbf{Bloco 4 -- Cobertura.} Indicadores que mensuram a capacidade de servir a dívida: Cobertura de Juros (EBITDA/Despesas Financeiras) e Dívida/EBITDA.
-
-\textbf{Bloco 5 -- Estrutura e Perfil.} Variáveis de controle que capturam características estruturais: Tamanho (log do Ativo Total), Tangibilidade (Imobilizado/Ativo) e proporção de dívida de curto vs. longo prazo.
-
-\textbf{Bloco 6 -- Heterogeneidade da Dívida.} Indicadores inspirados em \citet{fazzari1988} que capturam a diversificação das fontes de financiamento: Índice Herfindahl-Hirschman (IHH) por indexador e tipo de instrumento, e Índice de Diversificação (1 - IHH).
+\begin{itemize}
+    \item \textbf{Bloco 1 -- Alavancagem:} Indicadores de estrutura de capital que mensuram o nível de endividamento da empresa em relação a seus recursos próprios e ativos. Incluem: Dívida/Ativo Total, Dívida/Patrimônio Líquido (D/E), e Alavancagem Total ($D/(D+PL)$).
+    
+    \item \textbf{Bloco 2 -- Liquidez:} Indicadores que avaliam a capacidade de pagamento de curto prazo, incluindo Liquidez Corrente (AC/PC) e Liquidez Imediata (Caixa/PC).
+    
+    \item \textbf{Bloco 3 -- Rentabilidade:} Métricas de geração de valor e eficiência operacional: ROA, ROE, Margem EBITDA e Margem Líquida.
+    
+    \item \textbf{Bloco 4 -- Cobertura:} Indicadores que mensuram a capacidade de servir a dívida: Cobertura de Juros (EBITDA/Despesas Financeiras) e Dívida/EBITDA.
+    
+    \item \textbf{Bloco 5 -- Estrutura e Perfil:} Variáveis de controle que capturam características estruturais: Tamanho (log do Ativo Total), Tangibilidade (Imobilizado/Ativo) e proporção de dívida de curto vs. longo prazo.
+    
+    \item \textbf{Bloco 6 -- Heterogeneidade da Dívida:} Indicadores inspirados em \citet{fazzari1988} que capturam a diversificação das fontes de financiamento: Índice Herfindahl-Hirschman (IHH) por indexador e tipo de instrumento, e Índice de Diversificação (1 - IHH).
+\end{itemize}
 
 \begin{table}[H]
 \centering
@@ -110,11 +112,86 @@ A Figura \ref{fig:feature_mosaic} apresenta a metodologia de cálculo das featur
     \label{fig:feature_mosaic}
 \end{figure}
 
-Por fim, a Figura \ref{fig:correlation} apresenta a matriz de correlação de Pearson entre as variáveis explicativas. Destaca-se a correlação esperada entre indicadores do mesmo bloco (e.g., Dívida/Ativo e Alavancagem Total, $r > 0.8$), justificando a estratégia de seleção de variáveis via VIF para mitigar multicolinearidade no modelo de regressão.
+Para mitigar problemas de multicolinearidade, a seleção de variáveis para o modelo econométrico foi precedida por uma análise de correlação. A Tabela \ref{tab:correlation} apresenta a matriz de correlação de Pearson para as principais variáveis explicativas.
 
-\begin{figure}[H]
+\begin{table}[H]
     \centering
-    \includegraphics[width=\textwidth]{fig04_correlation.pdf}
-    \caption{Matriz de Correlação de Pearson entre Variáveis Explicativas}
-    \label{fig:correlation}
-\end{figure}
+    \caption{Matriz de Correlação de Pearson da Amostra Final}
+    \label{tab:correlation}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lrrrrrrrr}
+    \hline
+     & Kd & Alavancagem & Liq.C. & ROA & M.EBITDA & Tamanho & Tangib. & Div. \\
+    \hline
+    Kd & 1.00 &  &  &  &  &  &  &  \\
+    Alavancagem & 0.08 & 1.00 &  &  &  &  &  &  \\
+    Liq.C. & -0.19 & -0.56 & 1.00 &  &  &  &  &  \\
+    ROA & -0.22 & -0.16 & 0.16 & 1.00 &  &  &  &  \\
+    M.EBITDA & -0.13 & -0.17 & 0.07 & 0.69 & 1.00 &  &  &  \\
+    Tamanho & -0.36 & 0.03 & -0.17 & 0.17 & 0.16 & 1.00 &  &  \\
+    Tangib. & -0.23 & 0.18 & -0.18 & 0.16 & 0.32 & 0.14 & 1.00 &  \\
+    Div. & -0.01 & 0.11 & -0.21 & -0.06 & -0.11 & -0.00 & 0.01 & 1.00 \\
+    \hline
+    \end{tabular}
+    }
+    \vspace{0.3em}
+    \begin{flushleft}
+    \footnotesize Nota: Kd = Custo de Capital de Terceiros ponderado; Diversificação = Índice de Diversificação da Dívida (1 - HHI).
+    \end{flushleft}
+\end{table}
+
+\subsection{Modelo Econométrico}
+
+Para investigar os determinantes do custo de capital de terceiros, utiliza-se o modelo de Regressão Linear Múltipla estimado por Mínimos Quadrados Ordinários (OLS). A especificação geral do modelo é:
+
+\begin{equation}
+K_{d,i} = \beta_0 + \beta_1 X_{1,i} + \beta_2 X_{2,i} + \cdots + \beta_k X_{k,i} + \varepsilon_i
+\label{eq:ols}
+\end{equation}
+
+\noindent onde $K_{d,i}$ é o custo de capital de terceiros ponderado da empresa $i$, $X_{j,i}$ representa a $j$-ésima variável explicativa, $\beta_j$ são os coeficientes a serem estimados, e $\varepsilon_i$ é o termo de erro aleatório com $E[\varepsilon_i] = 0$ e $Var[\varepsilon_i] = \sigma^2$.
+
+\subsubsection{Seleção de Variáveis}
+
+O processo de seleção de variáveis seguiu duas etapas:
+
+\begin{enumerate}
+    \item \textbf{Fator de Inflação da Variância (VIF):} Para mitigar multicolinearidade, variáveis com $VIF > 5$ foram progressivamente removidas. O VIF é calculado como:
+    \begin{equation}
+    VIF_j = \frac{1}{1 - R_j^2}
+    \end{equation}
+    onde $R_j^2$ é o coeficiente de determinação da regressão de $X_j$ sobre as demais variáveis explicativas.
+    
+    \item \textbf{Eliminação Backward:} Variáveis com p-valor $> 0.15$ foram sequencialmente removidas até que todas as remanescentes fossem estatisticamente significativas.
+\end{enumerate}
+
+\subsubsection{Tratamento de Outliers}
+
+Observações influentes foram identificadas via Distância de Cook \citep{cook1977}, definida como:
+
+\begin{equation}
+D_i = \frac{(\hat{y}_j - \hat{y}_{j(i)})^2}{k \cdot MSE}
+\end{equation}
+
+\noindent onde $\hat{y}_{j(i)}$ é a predição para a observação $j$ quando a observação $i$ é excluída do ajuste, e $MSE$ é o erro quadrático médio. Observações com $D_i > 4/n$ foram removidas para garantir robustez dos estimadores.
+
+\subsubsection{Correção de Heterocedasticidade}
+
+A presença de heterocedasticidade foi avaliada pelo teste de Breusch-Pagan. Quando detectada ($p < 0.05$), os erros-padrão foram corrigidos utilizando o estimador robusto de variância \textbf{HC3} \citep{mackinnon1985}, que é consistente à heterocedasticidade:
+
+\begin{equation}
+\hat{V}_{HC3}(\hat{\beta}) = (X'X)^{-1} X' \text{diag}\left[\frac{\hat{u}_i^2}{(1-h_{ii})^2}\right] X (X'X)^{-1}
+\end{equation}
+
+\noindent onde $h_{ii}$ é o $i$-ésimo elemento diagonal da matriz chapéu $H = X(X'X)^{-1}X'$, e $\hat{u}_i$ são os resíduos OLS.
+
+\subsubsection{Implementação Computacional}
+
+A estimação foi realizada em Python utilizando a biblioteca \texttt{statsmodels} \citep{seabold2010}. O fluxo de execução inclui:
+
+\begin{itemize}
+    \item \texttt{sm.OLS(y, X).fit()}: Estimação OLS padrão
+    \item \texttt{variance\_inflation\_factor()}: Cálculo do VIF
+    \item \texttt{het\_breuschpagan()}: Teste de heterocedasticidade
+    \item \texttt{.fit(cov\_type='HC3')}: Reestimação com erros robustos
+\end{itemize}

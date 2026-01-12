@@ -1,0 +1,53 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Cook(1977)]{cook1977}
+R.~Dennis Cook.
+\newblock Detection of influential observation in linear regression.
+\newblock \emph{Technometrics}, 19\penalty0 (1):\penalty0 15--18, 1977.
+
+\bibitem[Fazzari et~al.(1988)Fazzari, Hubbard, and Petersen]{fazzari1988}
+Steven~M Fazzari, R~Glenn Hubbard, and Bruce~C Petersen.
+\newblock Financing constraints and corporate investment.
+\newblock \emph{Brookings Papers on Economic Activity}, 1988\penalty0
+  (1):\penalty0 141--195, 1988.
+
+\bibitem[Kaplan and Zingales(1997)]{kaplan1997}
+Steven~N Kaplan and Luigi Zingales.
+\newblock Do investment-cash flow sensitivities provide useful measures of
+  financing constraints?
+\newblock \emph{The Quarterly Journal of Economics}, 112\penalty0 (1):\penalty0
+  169--215, 1997.
+
+\bibitem[MacKinnon and White(1985)]{mackinnon1985}
+James~G MacKinnon and Halbert White.
+\newblock Some heteroskedasticity-consistent covariance matrix estimators with
+  improved finite sample properties.
+\newblock \emph{Journal of Econometrics}, 29\penalty0 (3):\penalty0 305--325,
+  1985.
+
+\bibitem[Modigliani and Miller(1958)]{modigliani1958}
+Franco Modigliani and Merton~H Miller.
+\newblock The cost of capital, corporation finance and the theory of
+  investment.
+\newblock \emph{The American Economic Review}, 48\penalty0 (3):\penalty0
+  261--297, 1958.
+
+\bibitem[Myers and Majluf(1984)]{myers1984}
+Stewart~C Myers and Nicholas~S Majluf.
+\newblock Corporate financing and investment decisions when firms have
+  information that investors do not have.
+\newblock \emph{Journal of financial economics}, 13\penalty0 (2):\penalty0
+  187--221, 1984.
+
+\bibitem[Seabold and Perktold(2010)]{seabold2010}
+Skipper Seabold and Josef Perktold.
+\newblock Statsmodels: Econometric and statistical modeling with python.
+\newblock In \emph{Proceedings of the 9th Python in Science Conference},
+  volume~57, page~61, 2010.
+
+\end{thebibliography}
