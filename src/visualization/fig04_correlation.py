@@ -19,6 +19,8 @@ import sys
 # Adicionar path do projeto
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.utils.config import CONSOLIDATED_PATH, FIGURES_DIR
+from src.visualization import styles
+styles.apply_style()
 
 # -----------------------------------------------------------------------------
 # CONFIGURAÇÃO DE ESTILO
@@ -35,7 +37,7 @@ plt.rcParams.update({
 })
 
 COLORS = {
-    'primary': '#2c3e50',
+    'primary': styles.COLORS['secondary'], # Azul escuro
     'text': '#1a1a1a',
 }
 
@@ -156,14 +158,14 @@ def create_correlation_plot(df):
         ax=ax
     )
     
-    # Título
-    ax.set_title(
-        'Figura 4: Matriz de Correlação de Pearson entre Variáveis Explicativas',
-        fontsize=14, 
-        fontweight='bold', 
-        color=COLORS['primary'],
-        pad=20
-    )
+    # Título (removido - usar caption no LaTeX)
+    # ax.set_title(
+    #     'Figura 4: Matriz de Correlação de Pearson entre Variáveis Explicativas',
+    #     fontsize=14, 
+    #     fontweight='bold', 
+    #     color=COLORS['primary'],
+    #     pad=20
+    # )
     
     # Ajustes finais
     plt.xticks(rotation=45, ha='right')
@@ -187,8 +189,8 @@ def main():
     
     # Salvar
     print("3. Salvando...")
-    output_path = FIGURES_DIR / "fig04_correlation.png"
-    fig.savefig(output_path, bbox_inches='tight', facecolor='white')
+    output_path = FIGURES_DIR / "fig04_correlation.pdf"
+    fig.savefig(output_path, bbox_inches='tight', facecolor='white', format='pdf')
     plt.close(fig)
     
     print(f"✓ Figura salva em: {output_path}")

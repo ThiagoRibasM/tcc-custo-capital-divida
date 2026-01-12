@@ -1,0 +1,120 @@
+\section{Metodologia}
+
+\subsection{Processamento de Texto com LLMs}
+Para mensurar a restrição financeira de forma qualitativa e em larga escala, adotou-se uma abordagem baseada em \textit{Large Language Models} (LLMs). O corpus textual compreende os Relatórios da Administração e Notas Explicativas das empresas listadas na B3, especificamente aquelas pertencentes ao Novo Mercado. Este segmento exige a adoção voluntária de práticas de governança corporativa adicionais às exigidas pela legislação. Suas principais características são a emissão exclusiva de ações ordinárias e a garantia de direitos igualitários aos acionistas minoritários em caso de alienação de controle (\textit{tag along}).
+
+O processo de extração seguiu três etapas:
+\begin{enumerate}
+    \item \textbf{Recuperação de Documentos}: Coleta automatizada dos PDFs das Demonstrações Financeiras Padronizadas (DFP) e Notas Explicativas, seguida de conversão para formato textual (OCR/Parsing) para permitir processamento computacional.
+    \item \textbf{Engenharia de Prompt}: Desenvolvimento de um \textit{System Prompt} especializado para atuária e finanças, instruindo o modelo a atuar como um especialista na extração de parâmetros de dívida corporativa. O prompt foi calibrado para identificar tabelas de endividamento e trechos narrativos complexos.
+    \item \textbf{Extração de Informação com LLM}: Utilização do modelo \textbf{Google Gemini 1.5 Pro} (via API Vertex AI) para extrair dados estruturados de cada documento. Diferente de uma análise de sentimento genérica, o modelo foi configurado para retornar um objeto JSON contendo especificamente: custo da dívida ($K_d$), indexadores (ex: CDI, IPCA), moedas e prazos de vencimento. A saída estruturada elimina a necessidade de classificação manual binária, permitindo a construção direta de variáveis contínuas para o custo de capital.
+\end{enumerate}
+
+A Figura \ref{fig:llm_pipeline} sintetiza o fluxo completo deste processo, desde a recuperação dos documentos até a classificação final.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig01_llm_pipeline.pdf}
+    \caption{Arquitetura do Pipeline de Dados e Ganho de Eficiência via LLM}
+    \label{fig:llm_pipeline}
+\end{figure}
+
+\subsection{Seleção da Amostra e Filtros}
+A amostra inicial é composta pelas 186 empresas listadas no segmento Novo Mercado da B3 no exercício de 2024. A partir deste universo, foram aplicados os seguintes filtros de saneamento:
+\begin{itemize}
+    \item Exclusão de empresas sem dados de endividamento estruturado nas Notas Explicativas, impossibilitando o cálculo do $K_d$ (59 empresas excluídas, restando 127).
+    \item Exclusão de observação com dados financeiros insuficientes para cálculo das features (1 empresa excluída, restando 126).
+    \item \textit{Winsorização} das variáveis contínuas a 1\% e 99\% para mitigar o efeito de \textit{outliers}.
+    \item Remoção de observações influentes via Distância de Cook \citep{cook1977} ($D > 4/n$) (7 empresas excluídas, restando 119).
+\end{itemize}
+A amostra final utilizada na modelagem econométrica compreende \textbf{119 empresas} do Novo Mercado.
+
+\subsection{Cálculo do Custo de Capital de Terceiros Ponderado ($K_d$)}
+
+A variável dependente do modelo, o Custo de Capital de Terceiros ($K_d$), foi estimada a partir das informações extraídas das Notas Explicativas de cada empresa. O processo seguiu três etapas:
+
+\textbf{Etapa 1 - Extração de Linhas de Financiamento.} Para cada empresa, o modelo LLM identificou nas Notas Explicativas os contratos de financiamento vigentes, extraindo:
+\begin{itemize}
+    \item Descrição do instrumento (ex: ``Capital de Giro'', ``BNDES'', ``Debêntures'')
+    \item Indexador e \textit{spread} (ex: ``CDI + 4,91\% a.a.'', ``IPCA + 7,5\% a.a.'')
+    \item Valor contábil consolidado em 31/12/2024 ($V_i$)
+\end{itemize}
+
+\textbf{Etapa 2 - Conversão para Taxa Nominal.} Os indexadores foram convertidos para taxas anualizadas utilizando as curvas de mercado de referência do período (CDI = 12,15\%, IPCA projetado = 4,5\%, SELIC = 12,25\%, TLP = 7,0\%). Para cada linha de financiamento $i$:
+
+\begin{equation}
+K_{d,i} = \text{Taxa\_Base}_i + \text{Spread}_i
+\end{equation}
+
+\textbf{Etapa 3 - Cálculo do Custo Ponderado.} O custo de capital de terceiros de cada empresa foi calculado como a média ponderada das taxas individuais, utilizando o valor contábil de cada financiamento como peso:
+
+\begin{equation}
+K_d = \frac{\sum_{i=1}^{n} K_{d,i} \times V_i}{\sum_{i=1}^{n} V_i}
+\end{equation}
+
+onde $n$ é o número de linhas de financiamento da empresa, $K_{d,i}$ é a taxa anualizada do financiamento $i$, e $V_i$ é o valor consolidado do financiamento $i$.
+
+Esta abordagem difere de proxies simplificadas como ``Despesas Financeiras / Dívida Total'', por capturar a estrutura heterogênea da dívida corporativa e refletir as condições contratuais específicas de cada instrumento. A Figura \ref{fig:sample_summary} apresenta a caracterização da amostra final e a distribuição empírica do $K_d$ ponderado.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig02_sample_summary.pdf}
+    \caption{Caracterização da Amostra e Distribuição do Custo de Capital de Terceiros}
+    \label{fig:sample_summary}
+\end{figure}
+
+\subsection{Cálculo dos Indicadores Financeiros}
+
+Para capturar a multidimensionalidade dos determinantes do custo de dívida, foram calculados indicadores financeiros organizados em seis blocos conceituais, conforme detalhado na Tabela \ref{tab:indicadores} e ilustrado na Figura \ref{fig:feature_mosaic}.
+
+\textbf{Bloco 1 -- Alavancagem.} Indicadores de estrutura de capital que mensuram o nível de endividamento da empresa em relação a seus recursos próprios e ativos. Incluem: Dívida/Ativo Total, Dívida/Patrimônio Líquido (D/E), e Alavancagem Total ($D/(D+PL)$).
+
+\textbf{Bloco 2 -- Liquidez.} Indicadores que avaliam a capacidade de pagamento de curto prazo, incluindo Liquidez Corrente (AC/PC) e Liquidez Imediata (Caixa/PC).
+
+\textbf{Bloco 3 -- Rentabilidade.} Métricas de geração de valor e eficiência operacional: ROA, ROE, Margem EBITDA e Margem Líquida.
+
+\textbf{Bloco 4 -- Cobertura.} Indicadores que mensuram a capacidade de servir a dívida: Cobertura de Juros (EBITDA/Despesas Financeiras) e Dívida/EBITDA.
+
+\textbf{Bloco 5 -- Estrutura e Perfil.} Variáveis de controle que capturam características estruturais: Tamanho (log do Ativo Total), Tangibilidade (Imobilizado/Ativo) e proporção de dívida de curto vs. longo prazo.
+
+\textbf{Bloco 6 -- Heterogeneidade da Dívida.} Indicadores inspirados em \citet{fazzari1988} que capturam a diversificação das fontes de financiamento: Índice Herfindahl-Hirschman (IHH) por indexador e tipo de instrumento, e Índice de Diversificação (1 - IHH).
+
+\begin{table}[H]
+\centering
+\small
+\caption{Estatísticas Descritivas dos Indicadores Financeiros (N = 119)}
+\label{tab:indicadores}
+\begin{tabular}{llrrrrr}
+\hline
+\textbf{Bloco} & \textbf{Indicador} & \textbf{Média} & \textbf{DP} & \textbf{Mín.} & \textbf{Med.} & \textbf{Máx.} \\
+\hline
+Alavancagem & Alavancagem Total & 0.50 & 0.21 & 0.00 & 0.50 & 0.99 \\
+Liquidez & Liquidez Corrente & 1.82 & 1.35 & 0.00 & 1.56 & 10.06 \\
+Liquidez & Liquidez Imediata & 0.44 & 0.39 & 0.00 & 0.35 & 2.43 \\
+Rentabilidade & ROA & 0.02 & 0.13 & -1.16 & 0.02 & 0.21 \\
+Rentabilidade & Margem EBITDA & 0.18 & 0.29 & -1.71 & 0.20 & 1.99 \\
+Estrutura & Tamanho (Log) & 16.11 & 1.71 & 12.18 & 15.75 & 22.18 \\
+Estrutura & Tangibilidade & 0.24 & 0.22 & 0.00 & 0.18 & 0.72 \\
+Heterogeneidade & IHH Indexador & 0.54 & 0.31 & 0.07 & 0.46 & 1.00 \\
+Heterogeneidade & Índice Diversif. & 0.46 & 0.31 & 0.00 & 0.55 & 0.93 \\
+\hline
+\end{tabular}
+\end{table}
+
+A Figura \ref{fig:feature_mosaic} apresenta a metodologia de cálculo das features, a taxonomia dos blocos financeiros e as distribuições empíricas dos principais indicadores via \textit{violin plots}. Observa-se heterogeneidade significativa nas métricas de alavancagem e liquidez, enquanto os indicadores de rentabilidade apresentam maior concentração em torno da média.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig03_feature_mosaic.pdf}
+    \caption{Criação de Features e Análise Exploratória}
+    \label{fig:feature_mosaic}
+\end{figure}
+
+Por fim, a Figura \ref{fig:correlation} apresenta a matriz de correlação de Pearson entre as variáveis explicativas. Destaca-se a correlação esperada entre indicadores do mesmo bloco (e.g., Dívida/Ativo e Alavancagem Total, $r > 0.8$), justificando a estratégia de seleção de variáveis via VIF para mitigar multicolinearidade no modelo de regressão.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig04_correlation.pdf}
+    \caption{Matriz de Correlação de Pearson entre Variáveis Explicativas}
+    \label{fig:correlation}
+\end{figure}

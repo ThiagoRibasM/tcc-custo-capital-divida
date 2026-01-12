@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Figura 2: Pipeline de Extração de Dados com LLM (Profissional)
+Figura 1: Pipeline de Extração de Dados com LLM (Profissional)
 
 Este script gera um diagrama de fluxo usando MATPLOTLIB e ÍCONES REAIS (PNG).
 Estilo: "Azure Architecture Diagram" / Infográfico Técnico.
@@ -20,24 +20,27 @@ import sys
 # Adicionar path do projeto
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.utils.config import FIGURES_DIR
+from src.visualization import styles
+styles.apply_style()
 
-# Configurações de estilo acadêmico (Igual Figura 1)
+# Configurações de estilo acadêmico
 plt.rcParams.update({
     'font.family': 'serif',
     'font.serif': ['Times New Roman', 'DejaVu Serif', 'serif'],
-    'font.size': 10,
-    'axes.titlesize': 11,
-    'axes.labelsize': 10,
-    'figure.titlesize': 12,
+    'font.size': 11,
+    'axes.titlesize': 12,
+    'axes.labelsize': 11,
+    'figure.titlesize': 13,
     'figure.dpi': 300,
 })
 
-# Cores de Alto Contraste (Evitando cinza claro para texto)
+# Cores de Alto Contraste (Padronizadas)
 COLORS = {
-    'primary': '#000000',      # Preto para títulos principais
-    'text': '#1a1a1a',         # Quase preto para descrições
-    'accent_line': '#2c3e50',  # Azul escuro para linhas/setas
-    'box_fill': '#f8f9fa'      # Fundo suave para métricas
+    'primary': styles.COLORS['primary'],
+    'title': styles.COLORS['secondary'],
+    'text': styles.COLORS['neutral'],
+    'accent_line': styles.COLORS['secondary'], 
+    'box_fill': '#f8f9fa'      
 }
 
 ASSETS_DIR = Path(__file__).parent / "assets"
@@ -54,45 +57,53 @@ def get_image(name, zoom=0.5):
 def create_professional_pipeline():
     """Cria diagrama com ícones reais + matplotlib."""
     
-    # Aumentar altura para caber a justificativa (Metrics)
-    fig, ax = plt.subplots(figsize=(12, 7))
+    # Aumentar altura para acomodar todos os elementos sem sobreposição
+    fig, ax = plt.subplots(figsize=(14, 7.5))
     ax.axis('off')
     ax.set_xlim(0, 1.0)
-    ax.set_ylim(0, 1.0) # Normalizado
+    ax.set_ylim(-0.05, 1.0)  # Estendido para baixo para caber o prompt box
 
-    # Layout Vertical (AJUSTE FINO 2.0 - Final Alignment)
-    TITLE_Y = 0.90        # Baixou +0.02 (aprox 10% do gap anterior)
-    ICON_Y = 0.72
-    TEXT_Y = 0.57
-    SUBTEXT_Y = 0.50
+    # ==========================================================================
+    # LAYOUT VERTICAL - ESPAÇAMENTO PROFISSIONAL
+    # ==========================================================================
+    # Zona Superior: Ícones e Labels (0.55 - 0.95)
+    ARROW_LABEL_Y = 0.88    # Labels das setas
+    ICON_Y = 0.78           # Ícones
+    TEXT_Y = 0.62           # Títulos dos passos
+    SUBTEXT_Y = 0.54        # Descrições
     
-    # Margens Horizontais (Coordenadas de Figura 0-1)
-    # Alinhamento estrito com Fig 1 (left=0.06, right=0.94)
-    MARGIN_LEFT = 0.06
-    MARGIN_RIGHT = 0.94
+    # Zona Inferior: Prompt Box e Nota (0.05 - 0.45)
+    PROMPT_BOX_TOP = 0.32   # Topo do box de prompt (abaixado)
+    DIVIDER_Y = 0.12        # Linha divisória (abaixada)
     
-    # Posições X distribuídas dentro das margens
-    X_POS = [0.12, 0.37, 0.62, 0.87] # O último em 0.87 permite que o texto não estoure 0.94.
+    # Margens Horizontais
+    MARGIN_LEFT = 0.05
+    MARGIN_RIGHT = 0.95
+    
+    # Posições X distribuídas uniformemente
+    X_POS = [0.125, 0.375, 0.625, 0.875]
 
-    # Definição dos Passos
+    # ==========================================================================
+    # PASSOS DO PIPELINE
+    # ==========================================================================
     steps = [
         {
-            "icon": "db_icon.png", "zoom": 0.45,
+            "icon": "db_icon.png", "zoom": 0.40,
             "title": "FONTE DE DADOS", 
             "desc": "CVM / B3\n(Dados Públicos)",
         },
         {
-            "icon": "pdf_icon.png", "zoom": 0.45,
+            "icon": "pdf_icon.png", "zoom": 0.40,
             "title": "INPUT NÃO ESTRUTURADO", 
             "desc": "DFP e Notas Explicativas\n(PDF / Texto)",
         },
         {
-            "icon": "ai_icon.png", "zoom": 0.45,
+            "icon": "ai_icon.png", "zoom": 0.40,
             "title": "MOTOR LLM AI", 
             "desc": "Google Gemini 1.5 Pro\n(Information Extraction)",
         },
         {
-            "icon": "csv_icon.png", "zoom": 0.45,
+            "icon": "csv_icon.png", "zoom": 0.40,
             "title": "DADOS ESTRUTURADOS", 
             "desc": "Dataset Final\n(Painel Balanceado)",
         }
@@ -107,60 +118,83 @@ def create_professional_pipeline():
             ax.add_artist(ab)
         
         ax.text(x, TEXT_Y, step["title"], 
-                ha='center', va='top', fontsize=10, fontweight='bold', 
+                ha='center', va='top', fontsize=12, fontweight='bold', 
                 color=COLORS['primary'])
         
         ax.text(x, SUBTEXT_Y, step["desc"], 
-                ha='center', va='top', fontsize=9.5, color=COLORS['text'],
-                linespacing=1.5)
+                ha='center', va='top', fontsize=11, color=COLORS['text'],
+                linespacing=1.4)
 
-    # Desenhar Setas Conectores (Escuras e visíveis)
-    ARROW_Y = ICON_Y
+    # ==========================================================================
+    # SETAS E LABELS (CORRIGIDO - DENTRO DO LOOP)
+    # ==========================================================================
     arrow_labels = ["Coleta Automática", "Prompt Engineering", "Parsing & Validação"]
     for i in range(len(steps) - 1):
-        x_start = X_POS[i] + 0.08
-        x_end = X_POS[i+1] - 0.08
+        x_start = X_POS[i] + 0.07
+        x_end = X_POS[i+1] - 0.07
         center_x = (x_start + x_end) / 2
         
-        ax.annotate("", xy=(x_end, ARROW_Y), xytext=(x_start, ARROW_Y),
+        # Seta
+        ax.annotate("", xy=(x_end, ICON_Y), xytext=(x_start, ICON_Y),
                     arrowprops=dict(arrowstyle="->", color=COLORS['accent_line'], lw=1.5, 
                                   shrinkA=5, shrinkB=5))
         
-        ax.text(center_x, ARROW_Y + 0.05, arrow_labels[i],
-                ha='center', va='bottom', fontsize=9, style='italic',
+        # Label da seta (DENTRO do loop)
+        ax.text(center_x, ARROW_LABEL_Y, arrow_labels[i],
+                ha='center', va='bottom', fontsize=11,
                 color=COLORS['text'], backgroundcolor='white')
 
-    # Destaque LLM
-    rect_y = 0.42
-    rect = mpatches.FancyBboxPatch((0.50, rect_y), 0.24, 0.45,
-                                   boxstyle="round,pad=0.02,rounding_size=0.04",
-                                   facecolor='#f3e5f5', edgecolor='#8e44ad',
-                                   linewidth=1.2, linestyle='--', zorder=0, alpha=0.4)
-    ax.add_patch(rect)
-    ax.text(0.62, rect_y + 0.43, "Núcleo de Processamento", ha='center', va='bottom', 
-            fontsize=9, color='#4a148c', fontweight='bold') 
+    # ==========================================================================
+    # DESTAQUE DO NÚCLEO DE PROCESSAMENTO
+    # ==========================================================================
+    # Box roxo ao redor do LLM
+    llm_box_left = X_POS[2] - 0.11
+    llm_box_bottom = SUBTEXT_Y - 0.08
+    llm_box_width = 0.22
+    llm_box_height = ARROW_LABEL_Y - llm_box_bottom + 0.05
     
-    # Prompt Text
+    rect = mpatches.FancyBboxPatch(
+        (llm_box_left, llm_box_bottom), llm_box_width, llm_box_height,
+        boxstyle="round,pad=0.02,rounding_size=0.03",
+        facecolor='#f3e5f5', edgecolor='#8e44ad',
+        linewidth=1.5, linestyle='--', zorder=0, alpha=0.35
+    )
+    ax.add_patch(rect)
+    
+    # Label do núcleo
+    ax.text(X_POS[2], llm_box_bottom + llm_box_height + 0.02, 
+            "Núcleo de Processamento", 
+            ha='center', va='bottom', fontsize=11, 
+            color='#4a148c', fontweight='bold')
+    
+    # ==========================================================================
+    # BOX DE PROMPT (POSICIONADO ABAIXO DOS STEPS)
+    # ==========================================================================
     prompt_text = (
         r"$\bf{Prompt\ System:}$ 'Você é um especialista financeiro...'" + "\n"
         r"$\bf{Task:}$ 'Extraia da Nota Explicativa:'" + "\n"
-        r" - Taxa de Juros (Kd)" + "\n"
-        r" - Indexador (CDI, IPCA)" + "\n"
-        r" - Moeda / Prazos" + "\n"
+        r"  - Taxa de Juros (Kd)" + "\n"
+        r"  - Indexador (CDI, IPCA)" + "\n"
+        r"  - Moeda / Prazos" + "\n"
         r"$\bf{Output:}$ JSON"
     )
     
-    # Subir Box Prompt ~5% (de 0.30 para 0.34)
+    # Posicionar o box de prompt abaixo do SUBTEXT, conectando ao ícone LLM
+    prompt_x = X_POS[2] - 0.08  # Movido para a esquerda para evitar corte
     ax.annotate(prompt_text,
-                xy=(X_POS[2], rect_y), xytext=(X_POS[2], 0.34), # Subiu
-                arrowprops=dict(arrowstyle='->', color='#2c3e50', connectionstyle="arc3"),
-                ha='left', va='top', fontsize=7.5, color=COLORS['text'], family='monospace',
-                bbox=dict(boxstyle="round,pad=0.3", fc="#ffffff", ec="#2c3e50", alpha=1.0))
+                xy=(X_POS[2], SUBTEXT_Y - 0.10),  # Conecta abaixo da descrição
+                xytext=(prompt_x, PROMPT_BOX_TOP),
+                arrowprops=dict(arrowstyle='->', color='#2c3e50', 
+                               connectionstyle="arc3,rad=-0.1", lw=1.2),
+                ha='left', va='top', fontsize=10, 
+                color=COLORS['text'], family='monospace',
+                bbox=dict(boxstyle="round,pad=0.4", fc="#ffffff", 
+                         ec="#2c3e50", alpha=1.0, lw=1.2))
     
-    # Nota Metodológica
-    # Linha divisória alinhada com Fig 1 (0.06 -> 0.94)
-    line_y = 0.18 
-    line = mlines.Line2D([MARGIN_LEFT, MARGIN_RIGHT], [line_y, line_y], 
+    # ==========================================================================
+    # NOTA METODOLÓGICA
+    # ==========================================================================
+    line = mlines.Line2D([MARGIN_LEFT, MARGIN_RIGHT], [DIVIDER_Y, DIVIDER_Y], 
                          color='#2c3e50', linewidth=1)
     ax.add_line(line)
     
@@ -172,14 +206,9 @@ def create_professional_pipeline():
         r"A validação humana atuou apenas por amostragem, assegurando integridade para a regressão."
     )
     
-    # Texto com wrap alinhado no limite 0.94 (agora com quebra manual)
-    txt = ax.text(MARGIN_LEFT, line_y - 0.02, justificativa_note, 
-            ha='left', va='top', fontsize=9, color=COLORS['text'],
-            linespacing=1.4) # wrap=True removido pois estamos controlando manualmente
-    
-    # Título Geral
-    fig.suptitle('Figura 1: Arquitetura do Pipeline de Dados e Ganho de Eficiência via LLM',
-                 fontsize=12, fontweight='bold', color='#000000', y=TITLE_Y)
+    ax.text(MARGIN_LEFT, DIVIDER_Y - 0.02, justificativa_note, 
+            ha='left', va='top', fontsize=12, color=COLORS['text'],
+            linespacing=1.4)
 
     return fig
 
@@ -197,8 +226,8 @@ def main():
     print("1. Renderizando diagrama com fontes serif e métricas...")
     fig = create_professional_pipeline()
     
-    output_path = FIGURES_DIR / "fig01_llm_pipeline.png"
-    fig.savefig(output_path, dpi=300, bbox_inches='tight', pad_inches=0.1)
+    output_path = FIGURES_DIR / "fig01_llm_pipeline.pdf"
+    fig.savefig(output_path, dpi=300, bbox_inches='tight', pad_inches=0.02, format='pdf')
     plt.close(fig)
     
     print(f"✓ Figura salva em: {output_path}")

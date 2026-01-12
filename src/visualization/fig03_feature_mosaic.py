@@ -22,6 +22,8 @@ import sys
 # Adicionar path do projeto
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.utils.config import CONSOLIDATED_PATH, FIGURES_DIR
+from src.visualization import styles
+styles.apply_style()
 
 # -----------------------------------------------------------------------------
 # CONFIGURAÇÃO DE ESTILO
@@ -36,13 +38,13 @@ plt.rcParams.update({
 })
 
 COLORS = {
-    'primary': '#2c3e50',       # Azul escuro
-    'secondary': '#2c3e50',     # Mudado de Cinza para Azul Escuro (High Contrast)
-    'accent': '#3498db',        # Azul claro
-    'highlight': '#c0392b',     # Vermelho tijolo
-    'card_bg': '#f8f9fa',       # Fundo card
-    'card_edge': '#2c3e50',     # Borda card (mais escura)
-    'text': '#000000',          # Preto Absoluto
+    'primary': styles.COLORS['secondary'],      # Azul escuro
+    'secondary': styles.COLORS['secondary'],
+    'accent': '#3498db',                        # Azul claro (manter para violins)
+    'highlight': styles.COLORS['primary'],      # Vermelho (#D64045/c0392b)
+    'card_bg': '#f8f9fa',
+    'card_edge': styles.COLORS['secondary'],
+    'text': '#000000',
 }
 
 ASSETS_DIR = Path(__file__).parent / "assets"
@@ -246,9 +248,9 @@ def draw_stats_panel(fig, gs_base, df):
 def create_figure(df):
     fig = plt.figure(figsize=(11, 10))
 
-    # Título Geral - Removido "Mosaico"
-    fig.suptitle('Figura 3: Criação de Features e Análise Exploratória', 
-                 fontsize=14, fontweight='bold', color=COLORS['primary'], y=0.98)
+    # Título Geral - Removido (será no LaTeX via \caption)
+    # fig.suptitle('Figura 3: Criação de Features e Análise Exploratória', 
+    #              fontsize=14, fontweight='bold', color=COLORS['primary'], y=0.98)
     
     # Ajuste de layout: A menor (0.15) para puxar B para cima (0.42)
     # hspace reduzido de 0.45 para 0.35
@@ -272,8 +274,8 @@ def main():
     df = load_data()
     fig = create_figure(df)
     
-    output = FIGURES_DIR / "fig03_feature_mosaic.png"
-    fig.savefig(output, facecolor='white', bbox_inches='tight')
+    output = FIGURES_DIR / "fig03_feature_mosaic.pdf"
+    fig.savefig(output, facecolor='white', bbox_inches='tight', format='pdf')
     print(f"Salvo em: {output}")
 
 if __name__ == "__main__":

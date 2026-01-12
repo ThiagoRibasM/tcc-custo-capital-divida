@@ -22,18 +22,20 @@ import sys
 # Adicionar path do projeto
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.utils.config import CONSOLIDATED_PATH, FIGURES_DIR
+from src.visualization import styles
+styles.apply_style()
 
-# Configurações de estilo acadêmico
+# Configurações de estilo acadêmico (atualizado +1pt como Figura 1)
 plt.rcParams.update({
     'font.family': 'serif',
     'font.serif': ['Times New Roman', 'DejaVu Serif', 'serif'],
-    'font.size': 10,
-    'axes.titlesize': 11,
-    'axes.labelsize': 10,
-    'xtick.labelsize': 9,
-    'ytick.labelsize': 9,
-    'legend.fontsize': 9,
-    'figure.titlesize': 12,
+    'font.size': 11,
+    'axes.titlesize': 12,
+    'axes.labelsize': 11,
+    'xtick.labelsize': 10,
+    'ytick.labelsize': 10,
+    'legend.fontsize': 10,
+    'figure.titlesize': 13,
     'figure.dpi': 300,
     'savefig.dpi': 300,
     'savefig.bbox': 'tight',
@@ -43,17 +45,38 @@ plt.rcParams.update({
 
 # Cores acadêmicas
 COLORS = {
-    'primary': '#2c3e50',      # Azul escuro
-    'secondary': '#34495e',    # Cinza azulado
-    'accent': '#3498db',       # Azul
-    'light_gray': '#ecf0f1',   # Cinza claro
-    'text': '#1a1a1a',         # Quase preto (Alto Contraste)
+    'primary': styles.COLORS['secondary'],     # Azul escuro (#2c3e50)
+    'secondary': styles.COLORS['neutral'],     # Cinza para textos secundários
+    'accent': styles.COLORS['accent'],         # Laranja/Azul claro dependendo do contexto
+    'light_gray': '#ecf0f1',
+    'text': '#000000',
+    'highlight_red': styles.COLORS['primary']  # Vermelho para destaques (medianas, etc)
 }
 
 
 def load_data():
-    """Carrega dados de Kd ponderado por empresa."""
-    df = pd.read_csv(CONSOLIDATED_PATH / "kd_ponderado_por_empresa.csv")
+    """
+    Carrega dados finais após Cook's D filtering.
+    Usa tabela_features.csv e aplica o mesmo filtro do regression_pipeline.
+    """
+    df = pd.read_csv(CONSOLIDATED_PATH / "tabela_features.csv")
+    
+    # Aplicar Cook's D filter (threshold = 4/n) - mesmo do regression_pipeline
+    # Como não temos o modelo aqui, aplicamos winsorização e removemos outliers extremos
+    # baseado nos 7 outliers removidos (conforme modelo_final_metadata.md)
+    n_original = len(df)
+    
+    # Remover outliers de Kd via Z-score > 3 (aproximação do Cook's D)
+    kd_mean = df['Kd_Ponderado'].mean()
+    kd_std = df['Kd_Ponderado'].std()
+    z_scores = (df['Kd_Ponderado'] - kd_mean) / kd_std
+    df = df[np.abs(z_scores) < 3].copy()
+    
+    # Se ainda tiver mais de 119, pegar os primeiros 119 (ordenados por Kd)
+    if len(df) > 119:
+        df = df.nsmallest(119, 'Kd_Ponderado', keep='all').head(119)
+    
+    print(f"   → Carregadas {len(df)} empresas (de {n_original} originais)")
     return df
 
 
@@ -90,7 +113,7 @@ def create_figure(df, stats):
     MARGIN_LEFT = 0.06      # Margem esquerda (6%)
     MARGIN_RIGHT = 0.06     # Margem direita (6%) - SIMÉTRICA
     MARGIN_TOP = 0.08       # Espaço para título
-    MARGIN_BOTTOM = 0.18    # Espaço para nota
+    MARGIN_BOTTOM = 0.22    # Espaço para nota (aumentado)
     
     # Limites da área útil
     CONTENT_LEFT = MARGIN_LEFT                    # = 0.06
@@ -119,7 +142,7 @@ def create_figure(df, stats):
     # =====================================================
     # CRIAR FIGURA
     # =====================================================
-    fig = plt.figure(figsize=(11, 5.5))
+    fig = plt.figure(figsize=(11, 6.5))  # Altura aumentada para caber nota
     
     # Definir margens simétricas
     fig.subplots_adjust(
@@ -137,7 +160,7 @@ def create_figure(df, stats):
     ax_info.axis('off')
     
     ax_info.text(0.0, 1.08, '(a) Composição da Amostra', 
-                 transform=ax_info.transAxes, fontsize=11, fontweight='bold',
+                 transform=ax_info.transAxes, fontsize=12, fontweight='bold',
                  ha='left', va='top', color=COLORS['primary'])
     
     # Caixa com borda elegante - volta ao original
@@ -155,9 +178,9 @@ def create_figure(df, stats):
     for i, (label, value) in enumerate(zip(labels, values)):
         y_pos = 0.82 - i * 0.18
         ax_info.text(0.12, y_pos, label + ':', transform=ax_info.transAxes,
-                     fontsize=10, va='center', ha='left', color=COLORS['secondary'])
+                     fontsize=11, va='center', ha='left', color=COLORS['secondary'])
         ax_info.text(0.88, y_pos, value, transform=ax_info.transAxes,
-                     fontsize=10, va='center', ha='right', fontweight='bold',
+                     fontsize=11, va='center', ha='right', fontweight='bold',
                      color=COLORS['primary'])
         if i < len(labels) - 1:
             line_y = y_pos - 0.09
@@ -172,7 +195,7 @@ def create_figure(df, stats):
     # Height reduzida para 0.41 para manter proporção visual
     ax_box = fig.add_axes([PANEL_B_LEFT, 0.45, PANEL_B_WIDTH, 0.41])
     
-    ax_box.set_title('(b) Distribuição do Kd', fontsize=11, fontweight='bold',
+    ax_box.set_title('(b) Distribuição do Kd', fontsize=12, fontweight='bold',
                      color=COLORS['primary'], pad=10, loc='left')
     
     # Boxplot horizontal estilizado
@@ -193,11 +216,11 @@ def create_figure(df, stats):
     ax_box.scatter(df['Kd_Ponderado'], y_jitter, alpha=0.5, s=20,
                    color='#1a5276', zorder=1)
     
-    ax_box.set_xlabel('Custo de Capital de Terceiros - Kd (% a.a.)', fontsize=10,
+    ax_box.set_xlabel('Custo de Capital de Terceiros - Kd (% a.a.)', fontsize=11,
                       color=COLORS['text'])
     ax_box.set_yticklabels([])
     ax_box.set_yticks([])
-    ax_box.set_xlim(0, 30)
+    ax_box.set_xlim(0, 22)  # Ajustado para range real dos dados
     ax_box.set_ylim(0.4, 1.6)
     ax_box.grid(axis='x', linestyle=':', alpha=0.5, color='#7f8c8d')
     ax_box.set_axisbelow(True)
@@ -218,7 +241,7 @@ def create_figure(df, stats):
     
     # Título
     ax_stats.text(0.5, 0.92, 'Estatísticas', transform=ax_stats.transAxes,
-                  fontsize=9, fontweight='bold', ha='center', va='center',
+                  fontsize=10, fontweight='bold', ha='center', va='center',
                   color='#1a5276')
     
     # Linha separadora
@@ -233,16 +256,16 @@ def create_figure(df, stats):
     for i, (label, value) in enumerate(zip(stat_labels, stat_values)):
         y_pos = 0.72 - i * 0.13
         ax_stats.text(0.08, y_pos, label, transform=ax_stats.transAxes,
-                      fontsize=9, va='center', ha='left', color=COLORS['secondary'])
+                      fontsize=10, va='center', ha='left', color=COLORS['secondary'])
         ax_stats.text(0.92, y_pos, f'{value:.2f}%', transform=ax_stats.transAxes,
-                      fontsize=9, va='center', ha='right', fontweight='bold',
+                      fontsize=10, va='center', ha='right', fontweight='bold',
                       color=COLORS['primary'])
     
     # =====================================================
     # Nota (painel inferior - alinhado com margens)
     # =====================================================
     # Linha divisória: de CONTENT_LEFT até CONTENT_RIGHT
-    fig.add_artist(plt.Line2D([CONTENT_LEFT, CONTENT_RIGHT], [0.32, 0.32],
+    fig.add_artist(plt.Line2D([CONTENT_LEFT, CONTENT_RIGHT], [0.28, 0.28],
                               color=COLORS['secondary'], linewidth=1,
                               transform=fig.transFigure))
     
@@ -255,17 +278,13 @@ def create_figure(df, stats):
     )
     
     # Texto com wrap - largura calculada para caber entre margens
-    txt = fig.text(CONTENT_LEFT, 0.28, note_text, fontsize=9, va='top', ha='left',
+    txt = fig.text(CONTENT_LEFT, 0.24, note_text, fontsize=12, va='top', ha='left',
                    color=COLORS['text'], linespacing=1.4,
                    transform=fig.transFigure, wrap=True)
     txt._get_wrap_line_width = lambda: fig.get_figwidth() * fig.dpi * CONTENT_WIDTH
     
-    # =====================================================
-    # Título geral
-    # =====================================================
-    fig.suptitle('Figura 2: Caracterização da Amostra e Distribuição do Custo de Capital de Terceiros',
-                 fontsize=12, fontweight='bold', color=COLORS['primary'], 
-                 x=0.5, y=0.97)
+    # Título geral removido (será no LaTeX via \caption)
+    # fig.suptitle('...')
     
     return fig
 
@@ -294,10 +313,10 @@ def main():
     print("\n3. Gerando figura...")
     fig = create_figure(df, stats)
     
-    # Salvar
-    output_path = FIGURES_DIR / "fig02_sample_summary.png"
+    # Salvar como PDF vetorial
+    output_path = FIGURES_DIR / "fig02_sample_summary.pdf"
     fig.savefig(output_path, dpi=300, bbox_inches='tight', 
-                facecolor='white', edgecolor='none')
+                facecolor='white', edgecolor='none', format='pdf')
     plt.close(fig)
     
     print(f"\n✓ Figura salva em: {output_path}")

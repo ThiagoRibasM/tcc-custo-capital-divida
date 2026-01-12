@@ -1,0 +1,83 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- PACOTES ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{times}          % Fonte Times New Roman
+\usepackage{geometry}       % Margens
+\usepackage{setspace}       % Espaçamento entre linhas
+\usepackage{indentfirst}    % Indenta o primeiro parágrafo
+\usepackage{graphicx}       % Inclusão de imagens
+\usepackage{float}          % Posicionamento de figuras
+\usepackage{amsmath}        % Fórmulas matemáticas
+\usepackage{natbib}         % Referências bibliográficas
+
+% --- CONFIGURAÇÕES DE PÁGINA (Manual TCC) ---
+% Margens: Superior/Esquerda 3cm, Inferior/Direita 2cm
+\geometry{
+    a4paper,
+    top=3cm,
+    bottom=2cm,
+    left=3cm,
+    right=2cm
+}
+
+% Espaçamento entre linhas: 1.5
+\onehalfspacing
+
+% Recuo do primeiro parágrafo: 0.63 cm
+\setlength{\parindent}{0.63cm}
+
+% Caminho para imagens
+\graphicspath{{../figures/}}
+
+% --- DADOS DO TRABALHO ---
+\title{\textbf{TÍTULO DO TRABALHO}}
+\author{Thiago Moncinhatto}
+\date{2026}
+
+\begin{document}
+
+% --- CAPA/FOLHA DE ROSTO (Simplificada) ---
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+% --- RESUMO ---
+\begin{abstract}
+\noindent Este é o resumo do trabalho. Deve conter de 100 a 250 palavras.
+
+\vspace{1cm}
+\noindent \textbf{Palavras-chave:} Palavra 1. Palavra 2. Palavra 3.
+\end{abstract}
+\newpage
+
+% --- SUMÁRIO ---
+\tableofcontents
+\newpage
+
+% --- INTRODUÇÃO ---
+\include{chapters/01_intro}
+
+% --- METODOLOGIA (LLM, Filtros, Modelos) ---
+\include{chapters/02_methods}
+
+% --- RESULTADOS ---
+\include{chapters/03_results}
+
+% --- DISCUSSÃO ---
+\include{chapters/04_discussion}
+
+% --- CONCLUSÃO ---
+\include{chapters/05_conclusion}
+
+% --- REFERÊNCIAS ---
+\newpage
+% Configuração de referências (Espaçamento simples, tamanho 10)
+\renewcommand{\bibfont}{\small}
+\setlength{\bibsep}{0.6pt} % Espaço entre referências
+\bibliographystyle{plainnat} % Ou outro estilo ABNT se configurado (abntex2-alf)
+\bibliography{references}
+
+\end{document}

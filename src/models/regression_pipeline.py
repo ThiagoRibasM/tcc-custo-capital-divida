@@ -27,6 +27,8 @@ import sys
 # Adicionar path do projeto
 sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.utils.config import CONSOLIDATED_PATH, FIGURES_DIR, REPORTS_DIR
+from src.visualization import styles
+styles.apply_style()
 
 # -----------------------------------------------------------------------------
 # CONFIGURAÇÕES
@@ -238,7 +240,7 @@ def plot_diagnostics(model, output_path):
     4. Influência (Robustness): Distância de Cook
     """
     fig = plt.figure(figsize=(12, 10))
-    fig.suptitle('Figura 5: Diagnóstico do Modelo Final OLS', fontsize=14, fontweight='bold', y=0.96)
+    fig.suptitle('Figura 5: Diagnóstico do Modelo Final OLS', fontsize=12, fontweight='bold', y=0.96)
     
     # Grid 2x2
     gs = fig.add_gridspec(2, 2, wspace=0.3, hspace=0.3)
@@ -251,7 +253,7 @@ def plot_diagnostics(model, output_path):
     y_pred = model.fittedvalues
     
     # Scatter
-    sns.scatterplot(x=y_pred, y=y_true, alpha=0.6, edgecolor='k', ax=ax1, color='#2c3e50')
+    sns.scatterplot(x=y_pred, y=y_true, alpha=0.6, edgecolor='k', ax=ax1, color=styles.COLORS['secondary'])
     
     # Linha Ideal (45 graus)
     min_val = min(y_true.min(), y_pred.min())
@@ -274,8 +276,8 @@ def plot_diagnostics(model, output_path):
     ax2 = fig.add_subplot(gs[0, 1])
     resid = model.resid
     
-    sns.scatterplot(x=y_pred, y=resid, alpha=0.6, edgecolor='k', ax=ax2, color='#2c3e50')
-    ax2.axhline(0, color='r', linestyle='--', lw=1.5)
+    sns.scatterplot(x=y_pred, y=resid, alpha=0.6, edgecolor='k', ax=ax2, color=styles.COLORS['secondary'])
+    ax2.axhline(0, color=styles.COLORS['primary'], linestyle='--', lw=1.5)
     
     # Lowess para detectar não-linearidade
     sns.regplot(x=y_pred, y=resid, scatter=False, lowess=True, ax=ax2, color='blue', 
@@ -292,8 +294,8 @@ def plot_diagnostics(model, output_path):
     ax3 = fig.add_subplot(gs[1, 0])
     (osm, osr), (slope, intercept, r) = stats.probplot(resid, dist="norm", plot=None)
     
-    ax3.scatter(osm, osr, alpha=0.6, edgecolor='k', color='#2c3e50')
-    ax3.plot(osm, slope * osm + intercept, 'r-', lw=1.5)
+    ax3.scatter(osm, osr, alpha=0.6, edgecolor='k', color=styles.COLORS['secondary'])
+    ax3.plot(osm, slope * osm + intercept, color=styles.COLORS['primary'], lw=1.5, linestyle='-')
     
     ax3.set_title(f'(c) Normalidade dos Resíduos ($R^2$={r**2:.2f})', fontsize=11, fontweight='bold')
     ax3.set_xlabel('Quantis Teóricos (Normal)')
@@ -313,11 +315,11 @@ def plot_diagnostics(model, output_path):
     threshold = 4 / n
     
     # Stem plot manual para controle estético
-    ax4.vlines(range(n), 0, cooks, color='#2c3e50', alpha=0.4)
-    ax4.scatter(range(n), cooks, s=15, color='#2c3e50', alpha=0.8)
+    ax4.vlines(range(n), 0, cooks, color=styles.COLORS['secondary'], alpha=0.4)
+    ax4.scatter(range(n), cooks, s=15, color=styles.COLORS['secondary'], alpha=0.8)
     
     # Linha de corte
-    ax4.axhline(threshold, color='r', linestyle='--', lw=1.5, label=f'Limiar (4/n = {threshold:.2f})')
+    ax4.axhline(threshold, color=styles.COLORS['primary'], linestyle='--', lw=1.5, label=f'Limiar (4/n = {threshold:.2f})')
     
     # Identificar outliers extremos
     outlier_indices = np.where(cooks > threshold)[0]

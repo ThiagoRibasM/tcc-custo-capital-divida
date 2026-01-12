@@ -1,0 +1,20 @@
+\section{Resultados das Análises}
+
+\textit{[Esta seção deve conter as tabelas geradas pelos scripts Python.]}
+
+Os resultados preliminares da classificação via LLM indicam que aproximadamente X\% da amostra apresenta indícios textuais de restrição financeira.
+
+\begin{table}[H]
+    \centering
+    \caption{Sensibilidade do Investimento ao Fluxo de Caixa}
+    \begin{tabular}{lcc}
+        \hline
+         & (1) Modelo Base & (2) Com Interação LLM \\
+        \hline
+        Fluxo de Caixa / K & 0.000*** & 0.000*** \\
+        Q de Tobin & 0.000** & 0.000** \\
+        Restrita * Fluxo de Caixa / K & - & 0.000* \\
+        \hline
+    \end{tabular}
+    \label{tab:regressao}
+\end{table}
